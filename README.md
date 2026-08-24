@@ -1,6 +1,6 @@
 # Yogesh Streamer
 
-[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v4.8.0.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.0/YogeshStreamer-v4.8.0.apk)
+[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v4.8.1.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.1/YogeshStreamer-v4.8.1.apk)
 [![Latest Release](https://img.shields.io/github/v/release/shahrukh-hack/yogesh-streamer?style=for-the-badge&color=7C3AED)](https://github.com/shahrukh-hack/yogesh-streamer/releases/latest)
 
 **Yogesh Streamer** is an Android media center and streaming player engineered for performance, modularity, and freedom.
@@ -13,7 +13,7 @@
 
 Anyone can download the ready-to-install APK directly:
 
-* **Direct APK Download:** **[Download YogeshStreamer-v4.8.0.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.0/YogeshStreamer-v4.8.0.apk)**
+* **Direct APK Download (Stable):** **[Download YogeshStreamer-v4.8.1.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.1/YogeshStreamer-v4.8.1.apk)**
 * **All Releases:** [View Releases Page](https://github.com/shahrukh-hack/yogesh-streamer/releases)
 
 ---
@@ -22,7 +22,8 @@ Anyone can download the ready-to-install APK directly:
 
 - **100% CloudStream Extension Compatibility**: Fully supports all `.cs3` plugins and repositories (Hexated, SuperStream, Sorastream, Sora, Anime, IPTV, etc.).
 - **Dynamic Git Module Updates**: Provider modules and scrapers update automatically in the background without needing to reinstall the APK.
-- **In-App Auto Updater**: Notifies you when a new app release is published on GitHub.
+- **In-App Auto Updater**: Automatically notifies you and updates when a new app release is published on GitHub.
+- **Luxury Branding & Themes**: Pre-bundled with Cyberpunk Neon, Yogesh Platinum, and True AMOLED Black themes.
 - **Advanced Video Player**:
   - Double-tap seek and swipe gestures for brightness & volume.
   - Intro & Outro Skip buttons.

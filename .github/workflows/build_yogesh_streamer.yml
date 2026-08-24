@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir -p output_apks
           # Copy and standardize APK names
-          cp app/build/outputs/apk/stable/debug/*.apk output_apks/YogeshStreamer-v4.8.0.apk || true
+          cp app/build/outputs/apk/stable/debug/*.apk output_apks/YogeshStreamer-v4.8.1.apk || true
           cp app/build/outputs/apk/prerelease/debug/*.apk output_apks/YogeshStreamer-PreRelease.apk || true
           cd output_apks
           ls -lah
@@ -57,8 +57,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
         with:
-          tag_name: v4.8.0
-          name: "Yogesh Streamer v4.8.0 (Stable & Pre-Release)"
+          tag_name: v4.8.1
+          name: "Yogesh Streamer v4.8.1 Official Release"
           files: output_apks/*.apk
           draft: false
           prerelease: false
