@@ -1,14 +1,28 @@
 # Yogesh Streamer
 
+[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v4.8.0.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.0/YogeshStreamer-v4.8.0.apk)
+[![Latest Release](https://img.shields.io/github/v/release/shahrukh-hack/yogesh-streamer?style=for-the-badge&color=7C3AED)](https://github.com/shahrukh-hack/yogesh-streamer/releases/latest)
+
 **Yogesh Streamer** is an Android media center and streaming player engineered for performance, modularity, and freedom.
 
 > **Note:** By default, Yogesh Streamer comes clean without third-party sources. You can install any standard CloudStream repository or extension to add custom sources and features.
 
 ---
 
+## 📥 Direct Download (No Login Required)
+
+Anyone can download the ready-to-install APK directly:
+
+* **Direct APK Download:** **[Download YogeshStreamer-v4.8.0.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.0/YogeshStreamer-v4.8.0.apk)**
+* **All Releases:** [View Releases Page](https://github.com/shahrukh-hack/yogesh-streamer/releases)
+
+---
+
 ## 🌟 Key Features
 
 - **100% CloudStream Extension Compatibility**: Fully supports all `.cs3` plugins and repositories (Hexated, SuperStream, Sorastream, Sora, Anime, IPTV, etc.).
+- **Dynamic Git Module Updates**: Provider modules and scrapers update automatically in the background without needing to reinstall the APK.
+- **In-App Auto Updater**: Notifies you when a new app release is published on GitHub.
 - **Advanced Video Player**:
   - Double-tap seek and swipe gestures for brightness & volume.
   - Intro & Outro Skip buttons.
@@ -22,31 +36,10 @@
 
 ---
 
-## 🚀 Building & Releasing the App
-
-### Option 1: Automated GitHub Actions (Recommended)
-1. Push this repository to your GitHub account (e.g. `https://github.com/your-username/yogesh-streamer`).
-2. Go to the **Actions** tab on GitHub.
-3. Select **Build Yogesh Streamer APK** and click **Run workflow**.
-4. Once completed, download the generated `YogeshStreamer-APK` artifact directly to your phone or Android TV.
-
-### Option 2: Local Build with Android Studio
-1. Open this directory (`yogesh-streamer`) in **Android Studio**.
-2. Let Gradle sync dependencies.
-3. Select **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
-4. Locate the APK in `app/build/outputs/apk/debug/app-debug.apk`.
-
-### Option 3: Command Line (Gradle)
-```bash
-./gradlew assembleDebug
-```
-The APK will be generated at `app/build/outputs/apk/debug/app-debug.apk`.
-
----
-
 ## 🔌 Adding Extensions & Repositories
 
 1. Open **Yogesh Streamer**.
-2. Go to **Settings > Extensions / Repositories**.
-3. Tap **Add Repository** and enter any compatible repository URL (e.g., standard CloudStream repos or `yogeshrepo://` links).
-4. Browse and install your favorite plugins!
+2. Go to **Settings > Extensions**.
+3. Tap **Add Repository** (or **+**).
+4. Enter `megarepo` or any community repository shortcode / URL and tap **Download**.
+5. Install your preferred providers and start streaming!
