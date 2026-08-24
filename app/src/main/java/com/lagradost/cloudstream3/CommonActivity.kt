@@ -353,6 +353,8 @@ object CommonActivity {
                 "Dracula" -> R.style.DraculaMode
                 "Lavender" -> R.style.LavenderMode
                 "SilentBlue" -> R.style.SilentBlueMode
+                "Cyberpunk" -> R.style.CyberpunkMode
+                "Platinum" -> R.style.PlatinumMode
 
                 else -> R.style.AppTheme
             }
@@ -378,6 +380,8 @@ object CommonActivity {
                 "Party" -> R.style.OverlayPrimaryColorParty
                 "Pink" -> R.style.OverlayPrimaryColorPink
                 "Lavender" -> R.style.OverlayPrimaryColorLavender
+                "CyberpunkNeon" -> R.style.OverlayPrimaryColorCyberpunkNeon
+                "YogeshGold" -> R.style.OverlayPrimaryColorYogeshGold
                 "Monet" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     R.style.OverlayPrimaryColorMonet else R.style.OverlayPrimaryColorNormal
 

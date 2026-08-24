@@ -275,6 +275,8 @@
         <item>Party</item>
         <item>Pink Pain</item>
         <item>Lavender</item>
+        <item>Cyberpunk Neon</item>
+        <item>Yogesh Gold</item>
         <item>Material You</item>
         <item>Material You (Secondary)</item>
     </string-array>
@@ -299,6 +301,8 @@
         <item>Party</item>
         <item>Pink</item>
         <item>Lavender</item>
+        <item>CyberpunkNeon</item>
+        <item>YogeshGold</item>
         <item>Monet</item>
         <item>Monet2</item>
     </string-array>
@@ -313,6 +317,8 @@
         <item>Dracula</item>
         <item>Lavender Dreams</item>
         <item>Silent Blue</item>
+        <item>Cyberpunk Neon</item>
+        <item>Yogesh Platinum</item>
     </string-array>
     <string-array name="themes_names_values">
         <item>AmoledLight</item>
@@ -324,6 +330,8 @@
         <item>Dracula</item>
         <item>Lavender</item>
         <item>SilentBlue</item>
+        <item>Cyberpunk</item>
+        <item>Platinum</item>
     </string-array>
 
     <string-array name="extension_statuses">

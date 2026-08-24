@@ -222,6 +222,32 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
+    <style name="CyberpunkMode">
+        <item name="primaryGrayBackground">@color/CyberpunkPrimaryGrayBackground</item>
+        <item name="primaryBlackBackground">@color/CyberpunkBitDarkerGrayBackground</item>
+        <item name="iconGrayBackground">@color/CyberpunkGrayBackground</item>
+        <item name="boxItemBackground">@color/CyberpunkItemBackground</item>
+        <item name="textColor">@color/CyberpunkTextColor</item>
+        <item name="grayTextColor">@color/CyberpunkGrayTextColor</item>
+        <item name="iconColor">@color/CyberpunkIconColor</item>
+        <item name="white">@color/CyberpunkTextColor</item>
+        <item name="black">@color/CyberpunkPrimaryGrayBackground</item>
+        <item name="colorOnPrimary">@color/whiteText</item>
+    </style>
+
+    <style name="PlatinumMode">
+        <item name="primaryGrayBackground">@color/PlatinumPrimaryGrayBackground</item>
+        <item name="primaryBlackBackground">@color/PlatinumBitDarkerGrayBackground</item>
+        <item name="iconGrayBackground">@color/PlatinumGrayBackground</item>
+        <item name="boxItemBackground">@color/PlatinumItemBackground</item>
+        <item name="textColor">@color/PlatinumTextColor</item>
+        <item name="grayTextColor">@color/PlatinumGrayTextColor</item>
+        <item name="iconColor">@color/PlatinumIconColor</item>
+        <item name="white">@color/PlatinumTextColor</item>
+        <item name="black">@color/PlatinumPrimaryGrayBackground</item>
+        <item name="colorOnPrimary">@color/whiteText</item>
+    </style>
+
     <style name="MonetMode">
         <item name="primaryGrayBackground">@color/material_dynamic_neutral20</item>
         <item name="primaryBlackBackground">@color/material_dynamic_neutral10</item>
@@ -446,6 +472,24 @@
         <item name="colorOnPrimary">@color/whiteText</item>
         <!--    Needed for leanback fuckery    -->
         <item name="android:colorAccent">@color/colorPrimaryLavender</item>
+    </style>
+
+    <style name="OverlayPrimaryColorCyberpunkNeon">
+        <item name="colorPrimary">@color/colorPrimaryCyberpunk</item>
+        <item name="android:colorPrimary">@color/colorPrimaryCyberpunk</item>
+        <item name="colorPrimaryDark">#0891B2</item>
+        <item name="colorAccent">#38BDF8</item>
+        <item name="colorOnPrimary">@color/whiteText</item>
+        <item name="android:colorAccent">@color/colorPrimaryCyberpunk</item>
+    </style>
+
+    <style name="OverlayPrimaryColorYogeshGold">
+        <item name="colorPrimary">@color/colorPrimaryPlatinum</item>
+        <item name="android:colorPrimary">@color/colorPrimaryPlatinum</item>
+        <item name="colorPrimaryDark">#D97706</item>
+        <item name="colorAccent">#FBBF24</item>
+        <item name="colorOnPrimary">@color/whiteText</item>
+        <item name="android:colorAccent">@color/colorPrimaryPlatinum</item>
     </style>
 
     <style name="customRatingBar" parent="@style/Widget.AppCompat.RatingBar">

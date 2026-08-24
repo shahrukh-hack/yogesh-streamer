@@ -98,7 +98,16 @@ data class PluginWrapper(
 object RepositoryManager {
     const val ONLINE_PLUGINS_FOLDER = "Extensions"
     val PREBUILT_REPOSITORIES: Array<RepositoryData> by lazy {
-        getKey<Array<RepositoryData>>("PREBUILT_REPOSITORIES") ?: emptyArray()
+        val custom = getKey<Array<RepositoryData>>("PREBUILT_REPOSITORIES")
+        if (custom != null && custom.isNotEmpty()) {
+            custom
+        } else {
+            arrayOf(
+                RepositoryData("https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer/master/assets/logos/cinematic_gold_logo_1787579512053.jpg", "Yogesh Streamer Official", "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/repo.json"),
+                RepositoryData(null, "Hexated Providers", "https://raw.githubusercontent.com/hexated/cloudstream-extensions-hexated/builds/repo.json"),
+                RepositoryData(null, "Storm Providers", "https://raw.githubusercontent.com/Rowdy-Avocado/Storm-CloudStream/builds/repo.json")
+            )
+        }
     }
     private val GH_REGEX =
         Regex("^https://raw.githubusercontent.com/([A-Za-z0-9-]+)/([A-Za-z0-9_.-]+)/(.*)$")

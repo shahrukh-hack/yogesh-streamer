@@ -122,4 +122,24 @@
     <color name="colorTestFail">#ea596e</color>
     <color name="colorTestWarning">#FF9800</color>
     <color name="playIconBackground">#B3000000</color>
+
+    <!-- Cyberpunk Theme -->
+    <color name="CyberpunkPrimaryGrayBackground">#10141E</color>
+    <color name="CyberpunkBitDarkerGrayBackground">#080B11</color>
+    <color name="CyberpunkGrayBackground">#161B26</color>
+    <color name="CyberpunkItemBackground">#131822</color>
+    <color name="CyberpunkTextColor">#E2E8F0</color>
+    <color name="CyberpunkGrayTextColor">#64748B</color>
+    <color name="CyberpunkIconColor">#38BDF8</color>
+    <color name="colorPrimaryCyberpunk">#06B6D4</color>
+
+    <!-- Platinum Luxury Theme -->
+    <color name="PlatinumPrimaryGrayBackground">#141416</color>
+    <color name="PlatinumBitDarkerGrayBackground">#0A0A0B</color>
+    <color name="PlatinumGrayBackground">#1E1E22</color>
+    <color name="PlatinumItemBackground">#18181C</color>
+    <color name="PlatinumTextColor">#F8FAFC</color>
+    <color name="PlatinumGrayTextColor">#71717A</color>
+    <color name="PlatinumIconColor">#E2E8F0</color>
+    <color name="colorPrimaryPlatinum">#F59E0B</color>
 </resources>
