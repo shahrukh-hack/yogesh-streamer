@@ -170,7 +170,7 @@ object CommonActivity {
             return
         }
         val lower = message.lowercase()
-        if (lower.contains("telegram") || lower.contains("t.me") || lower.contains("cncv") || lower.contains("cncverse") || lower.contains("subscribe") || lower.contains("join us") || lower.contains("join channel")) {
+        if (lower.contains("telegram") || lower.contains("t.me") || lower.contains("cncv") || lower.contains("cncverse") || lower.contains("subscribe") || lower.contains("join us") || lower.contains("join channel") || lower.contains("ads mode") || lower.contains("ad mode") || lower.contains("you are in ads") || lower.contains("free mode")) {
             Log.i(TAG, "Suppressed promotional plugin toast: $message")
             return
         }
