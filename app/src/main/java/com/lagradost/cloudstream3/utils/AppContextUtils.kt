@@ -591,6 +591,11 @@ object AppContextUtils {
         fallbackWebview: Boolean = false,
         fragment: Fragment? = null,
     ) = (this.getActivity() ?: activity)?.runOnUiThread {
+        val lower = url.lowercase()
+        if (lower.contains("t.me") || lower.contains("telegram") || lower.contains("cncverse") || lower.contains("buymeacoffee")) {
+            Log.i("AdBlocker", "Suppressed promotional URL: $url")
+            return@runOnUiThread
+        }
         try {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = url.toUri()
