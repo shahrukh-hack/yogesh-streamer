@@ -140,6 +140,10 @@ object RepositoryManager {
 
     suspend fun parseRepoUrl(url: String): String? {
         val fixedUrl = url.trim()
+        when (fixedUrl.lowercase()) {
+            "yogesh", "yogeshplugins", "yogeshstreamer", "official" -> return "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/repo.json"
+            "megarepo" -> return "https://raw.githubusercontent.com/hexated/cloudstream-extensions-hexated/builds/repo.json"
+        }
         return if (fixedUrl.contains("^https?://".toRegex())) {
             fixedUrl
         } else if (fixedUrl.contains("^(yogeshrepo://)|(yogeshstreamer://)|(cloudstreamrepo://)|(https://cs\\.repo/\\??)".toRegex())) {
