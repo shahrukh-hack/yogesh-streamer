@@ -156,7 +156,7 @@ class HomeViewModel : ViewModel() {
         if (isLayout(TV) && resumeWatchingResult != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ioSafe {
                 // this WILL crash on non tvs, so keep this inside a try catch
-                activity?.addProgramsToContinueWatching(resumeWatchingResult)
+                (context ?: activity)?.addProgramsToContinueWatching(resumeWatchingResult)
             }
         }
         resumeWatchingResult?.let {
@@ -384,6 +384,12 @@ class HomeViewModel : ViewModel() {
 
                             _randomItems.postValue(randomItems)
                             currentShuffledList = randomItems
+
+                            if (isLayout(TV) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                (context ?: activity)?.let { ctx ->
+                                    com.lagradost.cloudstream3.utils.TvRecommendationHelper.publishTrendingPrograms(ctx, currentList)
+                                }
+                            }
                         }
                     }
                     if (previewResponses.isEmpty()) {

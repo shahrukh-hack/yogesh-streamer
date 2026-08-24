@@ -395,6 +395,18 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                             showToast("Invalid Uri", Toast.LENGTH_SHORT)
                             return false
                         }
+                    } else if (str.startsWith("yogeshstreamer://load") || str.startsWith("cloudstream://load")) {
+                        try {
+                            val uri = str.toUri()
+                            val url = uri.getQueryParameter("url")
+                            val apiName = uri.getQueryParameter("apiName")
+                            if (url != null && apiName != null) {
+                                loadResult(url, apiName, "")
+                                return true
+                            }
+                        } catch (e: Exception) {
+                            logError(e)
+                        }
                     } else if (!isWebview) {
                         if (str.startsWith(DOWNLOAD_NAVIGATE_TO)) {
                             this.navigate(R.id.navigation_downloads)
