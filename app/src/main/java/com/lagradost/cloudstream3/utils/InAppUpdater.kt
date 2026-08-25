@@ -114,20 +114,14 @@ object InAppUpdater {
             } ?: 0
         }).toList()
 
-        val found = foundList.lastOrNull()
-        val foundAsset = found?.assets?.firstOrNull { it.name.endsWith(".apk") && versionRegex.containsMatchIn(it.name) }
-            ?: found?.assets?.firstOrNull { it.name.endsWith(".apk") }
-
-        if (foundAsset == null) {
-            return Update(false, null, null, null, null)
-        }
+        val found = foundList.lastOrNull() ?: return Update(false, null, null, null, null)
+        val foundAsset = found.assets.firstOrNull { it.name.endsWith(".apk") && versionRegex.containsMatchIn(it.name) }
+            ?: found.assets.firstOrNull { it.name.endsWith(".apk") }
+            ?: return Update(false, null, null, null, null)
 
         val foundVersion = versionRegex.find(foundAsset.name)
             ?: versionRegexLocal.find(found.tagName)
-
-        if (foundVersion == null) {
-            return Update(false, null, null, null, null)
-        }
+            ?: return Update(false, null, null, null, null)
 
         val currentVersion = packageName?.let {
             packageManager.getPackageInfo(it, 0)
