@@ -251,7 +251,10 @@ object QualityDataHelper {
         )
         val sourcePriority = getSourcePriority(qualityProfile, linkData?.source)
 
-        return qualityPriority + sourcePriority
+        // Prioritize fast direct HLS/M3U8 streams and direct CDNs for buffer-free instant playback
+        val fastStreamBonus = if (linkData?.isM3u8 == true || linkData?.isDash == true || linkData?.url?.contains(".m3u8") == true) 10 else 0
+
+        return qualityPriority + sourcePriority + fastStreamBonus
     }
 
     private fun closestQuality(target: Int?): Qualities {

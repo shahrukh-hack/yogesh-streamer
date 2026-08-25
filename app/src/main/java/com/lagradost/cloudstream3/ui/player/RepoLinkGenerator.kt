@@ -151,11 +151,74 @@ class RepoLinkGenerator(
             }
         )
 
+        if (currentCache.linkCache.isEmpty()) {
+            val titleToSearch = page?.name ?: current.headerName ?: current.name
+            if (!titleToSearch.isNullOrBlank()) {
+                Log.i(TAG, "No links from ${current.apiName}. Triggering Smart Cross-Provider Fallback for: $titleToSearch")
+                try {
+                    val otherApis = com.lagradost.cloudstream3.APIHolder.allApis.filter { it.name != current.apiName }
+                    for (api in otherApis.take(6)) {
+                        if (currentCache.linkCache.isNotEmpty()) break
+                        try {
+                            val searchResults = APIRepository(api).search(titleToSearch)
+                            val bestMatch = searchResults?.firstOrNull() ?: continue
+                            val loadRes = APIRepository(api).load(bestMatch.url)
+                            val episodeData = when (loadRes) {
+                                is com.lagradost.cloudstream3.MovieLoadResponse -> loadRes.dataUrl
+                                is com.lagradost.cloudstream3.TvSeriesLoadResponse -> {
+                                    val targetEp = current.episode ?: 1
+                                    val targetSeason = current.season ?: 1
+                                    loadRes.episodes.firstOrNull { it.episode == targetEp && (it.season == targetSeason || targetSeason == 1) }?.data
+                                        ?: loadRes.episodes.firstOrNull()?.data
+                                }
+                                else -> null
+                            }
+                            if (!episodeData.isNullOrBlank()) {
+                                Log.i(TAG, "Fallback found working source on ${api.name}! Extracting links...")
+                                APIRepository(api).loadLinks(
+                                    episodeData,
+                                    isCasting = isCasting,
+                                    subtitleCallback = { file ->
+                                        val correctFile = PlayerSubtitleHelper.getSubtitleData(file)
+                                        if (correctFile.url.isNotBlank() && currentSubsUrls.add(correctFile.url)) {
+                                            val nameDecoded = correctFile.originalName.html().toString().trim()
+                                            val suffixCount = lastCountedSuffix.getOrPut(nameDecoded) { AtomicInteger(0) }.incrementAndGet()
+                                            val updatedFile = correctFile.copy(originalName = nameDecoded, nameSuffix = "$suffixCount")
+                                            synchronized(currentCache) {
+                                                if (currentCache.subtitleCache.add(updatedFile)) {
+                                                    subtitleCallback(updatedFile)
+                                                }
+                                            }
+                                        }
+                                    },
+                                    callback = { link ->
+                                        if (link.url.isNotBlank() && currentLinksUrls.add(link.url)) {
+                                            synchronized(currentCache) {
+                                                if (currentCache.linkCache.add(link)) {
+                                                    if (sourceTypes.contains(link.type)) {
+                                                        callback(Pair(link, null))
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        } catch (e: Exception) {
+                            Log.d(TAG, "Fallback check on ${api.name} failed: ${e.message}")
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Cross-provider fallback error", e)
+                }
+            }
+        }
+
         synchronized(currentCache) {
             currentCache.saturated = currentCache.linkCache.isNotEmpty()
             currentCache.lastCachedTimestamp = unixTime
         }
 
-        return result
+        return currentCache.linkCache.isNotEmpty() || result
     }
 }
