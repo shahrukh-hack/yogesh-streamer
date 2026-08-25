@@ -156,13 +156,13 @@ class RepoLinkGenerator(
             if (!titleToSearch.isNullOrBlank()) {
                 Log.i(TAG, "No links from ${current.apiName}. Triggering Smart Cross-Provider Fallback for: $titleToSearch")
                 try {
-                    val otherApis = com.lagradost.cloudstream3.APIHolder.allApis.filter { it.name != current.apiName }
+                    val otherApis = com.lagradost.cloudstream3.APIHolder.apis.filter { it.name != current.apiName }
                     for (api in otherApis.take(6)) {
                         if (currentCache.linkCache.isNotEmpty()) break
                         try {
-                            val searchResults = APIRepository(api).search(titleToSearch)
-                            val bestMatch = searchResults?.firstOrNull() ?: continue
-                            val loadRes = APIRepository(api).load(bestMatch.url)
+                            val searchResults = APIRepository(api).search(titleToSearch, 1)
+                            val bestMatch = (searchResults as? com.lagradost.cloudstream3.mvvm.Resource.Success)?.value?.items?.firstOrNull() ?: continue
+                            val loadRes = (APIRepository(api).load(bestMatch.url) as? com.lagradost.cloudstream3.mvvm.Resource.Success)?.value
                             val episodeData = when (loadRes) {
                                 is com.lagradost.cloudstream3.MovieLoadResponse -> loadRes.dataUrl
                                 is com.lagradost.cloudstream3.TvSeriesLoadResponse -> {
@@ -170,6 +170,11 @@ class RepoLinkGenerator(
                                     val targetSeason = current.season ?: 1
                                     loadRes.episodes.firstOrNull { it.episode == targetEp && (it.season == targetSeason || targetSeason == 1) }?.data
                                         ?: loadRes.episodes.firstOrNull()?.data
+                                }
+                                is com.lagradost.cloudstream3.AnimeLoadResponse -> {
+                                    val targetEp = current.episode ?: 1
+                                    loadRes.episodes.values.flatten().firstOrNull { it.episode == targetEp }?.data
+                                        ?: loadRes.episodes.values.flatten().firstOrNull()?.data
                                 }
                                 else -> null
                             }
