@@ -58,8 +58,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
         with:
-          tag_name: v4.8.4
-          name: "Yogesh Streamer v4.8.4 Official Release"
+          tag_name: v5.0.0
+          name: "Yogesh Streamer v5.0.0 Official Major Release"
           files: output_apks/*.apk
           draft: false
           prerelease: false

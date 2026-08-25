@@ -83,35 +83,28 @@
         <Preference
             android:icon="@drawable/ic_github_logo"
             android:title="@string/github"
-            app:summary="https://github.com/recloudstream/cloudstream">
+            app:summary="https://github.com/shahrukh-hack/yogesh-streamer">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/recloudstream/cloudstream" />
+                android:data="https://github.com/shahrukh-hack/yogesh-streamer" />
         </Preference>
 
         <Preference
-            android:icon="@drawable/quick_novel_icon"
-            android:title="@string/lightnovel"
-            app:summary="https://github.com/LagradOst/QuickNovel">
+            android:icon="@drawable/ic_baseline_extension_24"
+            android:title="Official Plugins Repository"
+            app:summary="https://github.com/shahrukh-hack/yogesh-streamer-plugins">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/LagradOst/QuickNovel" />
+                android:data="https://github.com/shahrukh-hack/yogesh-streamer-plugins" />
         </Preference>
+
         <Preference
-            android:icon="@drawable/ic_baseline_discord_24"
-            android:title="@string/discord"
-            app:summary="https://discord.gg/5Hus6fM">
+            android:icon="@drawable/ic_baseline_system_update_24"
+            android:title="Official Releases &amp; Updates"
+            app:summary="https://github.com/shahrukh-hack/yogesh-streamer/releases">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://discord.gg/5Hus6fM" />
-        </Preference>
-        <Preference
-            android:icon="@drawable/baseline_description_24"
-            android:title="@string/cs3wiki"
-            app:summary="https://cloudstream.miraheze.org/">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://cloudstream.miraheze.org/" />
+                android:data="https://github.com/shahrukh-hack/yogesh-streamer/releases" />
         </Preference>
 
     </PreferenceCategory>
