@@ -41,9 +41,9 @@ jobs:
         run: |
           mkdir -p output_apks
           VERSION_NAME=$(grep 'versionName =' gradle/libs.versions.toml | cut -d '"' -f 2)
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
           echo "Building for Version: $VERSION_NAME"
           cp app/build/outputs/apk/stable/debug/*.apk output_apks/YogeshStreamer-v${VERSION_NAME}.apk || true
-          cp app/build/outputs/apk/prerelease/debug/*.apk output_apks/YogeshStreamer-PreRelease-v${VERSION_NAME}.apk || true
           cd output_apks
           ls -lah
 
@@ -58,8 +58,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
         with:
-          tag_name: v5.0.0
-          name: "Yogesh Streamer v5.0.0 Official Major Release"
+          tag_name: v${{ env.VERSION_NAME }}
+          name: "Yogesh Streamer v${{ env.VERSION_NAME }} Official Release"
           files: output_apks/*.apk
           draft: false
           prerelease: false
