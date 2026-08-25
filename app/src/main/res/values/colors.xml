@@ -7,16 +7,24 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#3b65f5</color> <!-- 818fff-->
 
-    <color name="primaryGrayBackground">#2B2C30</color> <!--0f0f10 0E0E10 303135 2B2C30-->
-    <color name="primaryBlackBackground">#111111</color> <!--1C1C20 191a1f 19181E 202125 1C1C20-->
-    <color name="iconGrayBackground">#1C1C20</color> <!--141419 202125-->
-    <color name="boxItemBackground">#161616</color> <!-- 17171B 1B1B20-->
+    <color name="primaryGrayBackground">#111622</color> <!--0f0f10 0E0E10 303135 2B2C30-->
+    <color name="primaryBlackBackground">#07090E</color> <!--1C1C20 191a1f 19181E 202125 1C1C20-->
+    <color name="iconGrayBackground">#141923</color> <!--141419 202125-->
+    <color name="boxItemBackground">#0D111A</color> <!-- 17171B 1B1B20-->
 
-    <color name="textColor">#e9eaee</color> <!--FFF-->
-    <color name="grayTextColor">#9ba0a4</color> <!-- 5e5f62-->
-    <color name="grayShimmer">#DCDCDC</color> <!-- 5e5f62-->
+    <color name="netflixRed">#E50914</color>
+    <color name="primeBlue">#00A8E1</color>
+    <color name="cinemaGold">#F59E0B</color>
+    <color name="cinemaDarkBg">#07090E</color>
+    <color name="cinemaCardBg">#111622</color>
+    <color name="cinemaCardBorder">#1F293D</color>
+    <color name="glassOverlay">#8007090E</color>
 
-    <color name="searchColorTransparent">#1AFFFFFF</color> <!--DADADA-->
+    <color name="textColor">#F1F5F9</color> <!--FFF-->
+    <color name="grayTextColor">#94A3B8</color> <!-- 5e5f62-->
+    <color name="grayShimmer">#1E293B</color> <!-- 5e5f62-->
+
+    <color name="searchColorTransparent">#26FFFFFF</color> <!--DADADA-->
     <color name="transparent">#00000000</color>
 
     <color name="white">#FFF</color>

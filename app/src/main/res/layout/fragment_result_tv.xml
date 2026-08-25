@@ -59,63 +59,15 @@ https://developer.android.com/design/ui/tv/samples/jet-fit
 
     </FrameLayout>
 
-    <com.facebook.shimmer.ShimmerFrameLayout
+    <FrameLayout
         android:id="@+id/result_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        app:shimmer_auto_start="true"
-        app:shimmer_base_alpha="0.2"
-        app:shimmer_duration="@integer/loading_time"
-        app:shimmer_highlight_alpha="0.3"
-        tools:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/result_padding"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/loading_margin"
-                android:orientation="horizontal">
-
-                <include layout="@layout/loading_poster" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/loading_margin"
-                    android:layout_marginEnd="@dimen/loading_margin"
-                    android:orientation="vertical">
-
-                    <include layout="@layout/loading_line" />
-
-                    <include layout="@layout/loading_line" />
-
-                    <include layout="@layout/loading_line" />
-
-                    <include layout="@layout/loading_line" />
-
-                    <include layout="@layout/loading_line_short" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                tools:ignore="ContentDescription" />
-
-            <include layout="@layout/loading_episode" />
-
-            <include layout="@layout/loading_episode" />
-
-            <include layout="@layout/loading_episode" />
-        </LinearLayout>
-    </com.facebook.shimmer.ShimmerFrameLayout>
+        <include layout="@layout/view_branded_loading" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/result_loading_error"

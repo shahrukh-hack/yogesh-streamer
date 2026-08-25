@@ -58,11 +58,36 @@
             app:rippleColor="?attr/colorPrimary"
             tools:visibility="visible" />
 
-        <ProgressBar
-            android:id="@+id/main_load"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@drawable/splash_logo"
+                android:contentDescription="Loading Yogesh Streamer" />
+
+            <ProgressBar
+                android:id="@+id/main_load"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="12dp"
+                android:indeterminateTint="#F59E0B" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Loading Stream..."
+                android:textColor="#CBD5E1"
+                android:letterSpacing="0.05"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/video_go_back_holder_holder"

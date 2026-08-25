@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E607090E"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- Outer Glowing Ring -->
+        <FrameLayout
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/branded_loading_glow"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:contentDescription="Yogesh Streamer Logo"
+                android:src="@drawable/splash_logo" />
+        </FrameLayout>
+
+        <!-- Brand Title & Loading Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.08"
+            android:text="YOGESH STREAMER"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:indeterminateTint="#F59E0B" />
+
+            <TextView
+                android:id="@+id/branded_loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:letterSpacing="0.04"
+                android:text="Preparing Cinema Stream..."
+                android:textColor="#A0AEC0"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>
