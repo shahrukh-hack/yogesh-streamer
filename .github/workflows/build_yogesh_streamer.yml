@@ -40,9 +40,10 @@ jobs:
       - name: Prepare APK Artifacts
         run: |
           mkdir -p output_apks
-          # Copy and standardize APK names
-          cp app/build/outputs/apk/stable/debug/*.apk output_apks/YogeshStreamer-v4.8.1.apk || true
-          cp app/build/outputs/apk/prerelease/debug/*.apk output_apks/YogeshStreamer-PreRelease.apk || true
+          VERSION_NAME=$(grep 'versionName =' gradle/libs.versions.toml | cut -d '"' -f 2)
+          echo "Building for Version: $VERSION_NAME"
+          cp app/build/outputs/apk/stable/debug/*.apk output_apks/YogeshStreamer-v${VERSION_NAME}.apk || true
+          cp app/build/outputs/apk/prerelease/debug/*.apk output_apks/YogeshStreamer-PreRelease-v${VERSION_NAME}.apk || true
           cd output_apks
           ls -lah
 

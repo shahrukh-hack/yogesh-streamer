@@ -1,11 +1,11 @@
 # Yogesh Streamer
 
-[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v4.8.1.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.1/YogeshStreamer-v4.8.1.apk)
+[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v4.8.4.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.4/YogeshStreamer-v4.8.4.apk)
 [![Latest Release](https://img.shields.io/github/v/release/shahrukh-hack/yogesh-streamer?style=for-the-badge&color=7C3AED)](https://github.com/shahrukh-hack/yogesh-streamer/releases/latest)
 
 **Yogesh Streamer** is an Android media center and streaming player engineered for performance, modularity, and freedom.
 
-> **Note:** By default, Yogesh Streamer comes clean without third-party sources. You can install any standard CloudStream repository or extension to add custom sources and features.
+> **Note:** By default, Yogesh Streamer comes clean without third-party sources. You can install your official repository using the shortcode `yogesh` in the Extensions settings.
 
 ---
 
@@ -13,7 +13,7 @@
 
 Anyone can download the ready-to-install APK directly:
 
-* **Direct APK Download (Stable):** **[Download YogeshStreamer-v4.8.1.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.1/YogeshStreamer-v4.8.1.apk)**
+* **Direct APK Download (Latest v4.8.4):** **[Download YogeshStreamer-v4.8.4.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v4.8.4/YogeshStreamer-v4.8.4.apk)**
 * **All Releases:** [View Releases Page](https://github.com/shahrukh-hack/yogesh-streamer/releases)
 
 ---
