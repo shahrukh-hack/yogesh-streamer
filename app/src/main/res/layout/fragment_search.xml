@@ -115,8 +115,11 @@
         <include
             android:id="@+id/tvtypes_chips_scroll"
             layout="@layout/tvtypes_chips_scroll" />
-    </LinearLayout>
 
+        <include
+            android:id="@+id/search_genre_grid_layout"
+            layout="@layout/view_search_genre_grid" />
+    </LinearLayout>
 
     <com.lagradost.cloudstream3.ui.AutofitRecyclerView
         android:id="@+id/search_autofit_results"
