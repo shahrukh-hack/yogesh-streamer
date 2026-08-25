@@ -86,8 +86,6 @@ object InAppUpdater {
     private suspend fun Activity.getAppUpdate(installPrerelease: Boolean): Update {
         return try {
             when {
-                // No updates on debug version
-                BuildConfig.DEBUG -> Update(false, null, null, null, null)
                 BuildConfig.FLAVOR == "prerelease" || installPrerelease -> getPreReleaseUpdate()
                 else -> getReleaseUpdate()
             }
@@ -109,16 +107,23 @@ object InAppUpdater {
         val foundList = response.filter { rel ->
             !rel.prerelease
         }.sortedWith(compareBy { release ->
-            release.assets.firstOrNull { it.contentType == "application/vnd.android.package-archive" }?.name?.let { it1 ->
+            release.assets.firstOrNull { it.name.endsWith(".apk") }?.name?.let { it1 ->
                 versionRegex.find(it1)?.groupValues?.let {
                     it[3].toInt() * 100_000_000 + it[4].toInt() * 10_000 + it[5].toInt()
                 }
-            }
+            } ?: 0
         }).toList()
 
         val found = foundList.lastOrNull()
-        val foundAsset = found?.assets?.getOrNull(0)
-        val foundVersion = foundAsset?.name?.let { versionRegex.find(it) }
+        val foundAsset = found?.assets?.firstOrNull { it.name.endsWith(".apk") && versionRegex.containsMatchIn(it.name) }
+            ?: found?.assets?.firstOrNull { it.name.endsWith(".apk") }
+
+        if (foundAsset == null) {
+            return Update(false, null, null, null, null)
+        }
+
+        val foundVersion = versionRegex.find(foundAsset.name)
+            ?: versionRegexLocal.find(found.tagName)
 
         if (foundVersion == null) {
             return Update(false, null, null, null, null)
@@ -128,18 +133,19 @@ object InAppUpdater {
             packageManager.getPackageInfo(it, 0)
         }
 
-        val shouldUpdate = if (foundAsset.browserDownloadUrl.isBlank()) {
-            false
-        } else {
-            currentVersion?.versionName?.let { versionName ->
-                versionRegexLocal.find(versionName)?.groupValues?.let {
-                    it[3].toInt() * 100_000_000 + it[4].toInt() * 10_000 + it[5].toInt()
-                }
-            }?.compareTo(
-                foundVersion.groupValues.let {
-                    it[3].toInt() * 100_000_000 + it[4].toInt() * 10_000 + it[5].toInt()
-                })!! < 0
+        val remoteVersionScore = foundVersion.groupValues.let {
+            it[3].toInt() * 100_000_000 + it[4].toInt() * 10_000 + it[5].toInt()
         }
+
+        val currentVersionScore = currentVersion?.versionName?.let { versionName ->
+            versionRegexLocal.find(versionName)?.groupValues?.let {
+                it[3].toInt() * 100_000_000 + it[4].toInt() * 10_000 + it[5].toInt()
+            }
+        } ?: 0
+
+        val shouldUpdate = !foundAsset.browserDownloadUrl.isBlank() && (currentVersionScore < remoteVersionScore)
+
+        Log.i(LOG_TAG, "Update check: localScore=$currentVersionScore (${currentVersion?.versionName}), remoteScore=$remoteVersionScore (${foundVersion.groupValues[2]}), shouldUpdate=$shouldUpdate")
 
         return Update(
             shouldUpdate,

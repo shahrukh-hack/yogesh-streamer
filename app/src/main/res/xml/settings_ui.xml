@@ -45,6 +45,13 @@
             app:min="0"
             app:seekBarIncrement="1"
             app:showSeekBarValue="true" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_baseline_volume_up_24"
+            android:key="play_startup_sound_key"
+            android:summary="Play sacred Om Namah Shivaya audio on app launch"
+            android:title="Spiritual Startup Sound" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_ui_features">
