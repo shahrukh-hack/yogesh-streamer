@@ -119,6 +119,18 @@
             layout="@layout/tvtypes_chips_scroll" />
     </LinearLayout>
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/search_genre_grid_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/navbar_width"
+        android:fillViewport="true"
+        android:visibility="visible">
+
+        <include
+            android:id="@+id/search_genre_grid_layout"
+            layout="@layout/view_search_genre_grid" />
+    </androidx.core.widget.NestedScrollView>
 
     <com.lagradost.cloudstream3.ui.AutofitRecyclerView
         android:id="@+id/search_autofit_results"

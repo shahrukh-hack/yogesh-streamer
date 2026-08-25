@@ -115,17 +115,24 @@
         <include
             android:id="@+id/tvtypes_chips_scroll"
             layout="@layout/tvtypes_chips_scroll" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/search_genre_grid_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:visibility="visible">
 
         <include
             android:id="@+id/search_genre_grid_layout"
             layout="@layout/view_search_genre_grid" />
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <com.lagradost.cloudstream3.ui.AutofitRecyclerView
         android:id="@+id/search_autofit_results"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:background="?attr/primaryBlackBackground"
         android:clipToPadding="false"
         android:descendantFocusability="afterDescendants"
@@ -142,10 +149,8 @@
         android:id="@+id/search_master_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:background="?attr/primaryBlackBackground"
         android:descendantFocusability="afterDescendants"
-
         android:nextFocusLeft="@id/nav_rail_view"
         android:nextFocusUp="@id/tvtypes_chips"
         android:visibility="gone"
@@ -154,12 +159,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_history_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="?attr/primaryBlackBackground"
         android:descendantFocusability="afterDescendants"
         android:nextFocusLeft="@id/nav_rail_view"
         android:nextFocusUp="@id/tvtypes_chips"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:listitem="@layout/search_history_item" />
     </LinearLayout>
 

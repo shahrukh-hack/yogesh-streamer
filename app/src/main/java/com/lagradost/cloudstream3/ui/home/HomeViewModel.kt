@@ -523,25 +523,17 @@ class HomeViewModel : ViewModel() {
             }
 
             val api = getApiFromNameNull(preferredApiName)
-            if (preferredApiName == noneApi.name) {
-                // just set to random
-                if (fromUI) DataStoreHelper.currentHomePage = noneApi.name
+            if (preferredApiName == noneApi.name && fromUI) {
+                DataStoreHelper.currentHomePage = noneApi.name
                 loadAndCancel(noneApi)
-            } else if (preferredApiName == randomApi.name) {
-                // randomize the api, if none exist like if not loaded or not installed
-                // then use nothing
-                val validAPIs = context?.filterProviderByPreferredMedia()
-                if (validAPIs.isNullOrEmpty()) {
-                    loadAndCancel(noneApi)
-                } else {
-                    val apiRandom = validAPIs.random()
-                    loadAndCancel(apiRandom)
-                    if (fromUI) DataStoreHelper.currentHomePage = apiRandom.name
-                }
-            } else if (api == null) {
-                // API is not found aka not loaded or removed, post the loading
-                // progress if waiting for plugins, otherwise nothing
-                if (PluginManager.loadedOnlinePlugins || PluginManager.isSafeMode()) {
+            } else if (preferredApiName == randomApi.name || preferredApiName == null || api == null || preferredApiName == noneApi.name) {
+                // Automatically find and load the best available provider with a homepage
+                val validAPIs = (context?.filterProviderByPreferredMedia() ?: apis).filter { it.hasMainPage && it.name != noneApi.name }
+                if (validAPIs.isNotEmpty()) {
+                    val selected = validAPIs.firstOrNull { it.name == "SoraStream" || it.name == "HDToday" || it.name == "FlixHQ" } ?: validAPIs.first()
+                    loadAndCancel(selected)
+                    if (fromUI) DataStoreHelper.currentHomePage = selected.name
+                } else if (PluginManager.loadedOnlinePlugins || PluginManager.isSafeMode()) {
                     loadAndCancel(noneApi)
                 } else {
                     _page.postValue(Resource.Loading())
