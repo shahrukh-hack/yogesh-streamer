@@ -592,8 +592,26 @@ object AppContextUtils {
         fragment: Fragment? = null,
     ) = (this.getActivity() ?: activity)?.runOnUiThread {
         val lower = url.lowercase()
-        if (lower.contains("t.me") || lower.contains("telegram") || lower.contains("cncverse") || lower.contains("buymeacoffee")) {
-            Log.i("AdBlocker", "Suppressed promotional URL: $url")
+        val stack = Thread.currentThread().stackTrace
+        val isPluginOrPlayer = stack.any {
+            val name = it.className.lowercase()
+            name.contains("plugin") || name.contains("extractor") || name.contains("generatorplayer") ||
+            name.contains("resultviewmodel") || name.contains("provider") || name.contains("loadlink") ||
+            name.contains("videoclick")
+        }
+        val isAdOrSpam = lower.contains("t.me") || lower.contains("telegram") ||
+                         lower.contains("cncverse") || lower.contains("buymeacoffee") ||
+                         lower.contains("linkvertise") || lower.contains("ouo.io") ||
+                         lower.contains("short") || lower.contains("bit.ly") ||
+                         lower.contains("tinyurl") || lower.contains("adsterra") ||
+                         lower.contains("monetag") || lower.contains("popads") ||
+                         lower.contains("adfly") || lower.contains("cpm") ||
+                         lower.contains("direct-link") || lower.contains("ads") ||
+                         lower.contains("casino") || lower.contains("1xbet") ||
+                         lower.contains("bet") || lower.contains("bonus")
+
+        if (isPluginOrPlayer || isAdOrSpam) {
+            Log.w("AdBlocker", "Suppressed unauthorized browser popup: $url")
             return@runOnUiThread
         }
         try {

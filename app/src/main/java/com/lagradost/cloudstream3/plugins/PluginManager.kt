@@ -6,10 +6,13 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
 import android.content.res.Resources
 import android.os.Build
+import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
@@ -667,7 +670,8 @@ object PluginManager {
                 urlPlugins[data.url ?: filePath] = pluginInstance
             }
             if (pluginInstance is Plugin) {
-                pluginInstance.load(context)
+                val safeContext = PluginSafeContext(context)
+                pluginInstance.load(safeContext)
             } else {
                 pluginInstance.load()
             }
@@ -962,6 +966,33 @@ object PluginManager {
         } catch (e: Exception) {
             logError(e)
             return null
+    }
+}
+
+class PluginSafeContext(base: Context) : ContextWrapper(base) {
+    override fun startActivity(intent: Intent?) {
+        if (intent?.action == Intent.ACTION_VIEW) {
+            val url = intent.dataString ?: ""
+            Log.w("PluginSafeContext", "Blocked unauthorized plugin startActivity ACTION_VIEW: $url")
+            return
+        }
+        try {
+            super.startActivity(intent)
+        } catch (e: Exception) {
+            Log.e("PluginSafeContext", "Failed to start activity", e)
+        }
+    }
+
+    override fun startActivity(intent: Intent?, options: Bundle?) {
+        if (intent?.action == Intent.ACTION_VIEW) {
+            val url = intent.dataString ?: ""
+            Log.w("PluginSafeContext", "Blocked unauthorized plugin startActivity ACTION_VIEW: $url")
+            return
+        }
+        try {
+            super.startActivity(intent, options)
+        } catch (e: Exception) {
+            Log.e("PluginSafeContext", "Failed to start activity", e)
         }
     }
 }
