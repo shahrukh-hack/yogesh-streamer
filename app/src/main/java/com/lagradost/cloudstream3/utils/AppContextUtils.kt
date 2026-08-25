@@ -451,9 +451,7 @@ object AppContextUtils {
         val oldLoader = Thread.currentThread().contextClassLoader
         Thread.currentThread().contextClassLoader = TvType::class.java.classLoader
 
-        val default = TvType.values()
-            .sorted()
-            .filter { it != TvType.NSFW }
+        val default = listOf(TvType.Movie, TvType.TvSeries)
             .map { it.ordinal }
 
         Thread.currentThread().contextClassLoader = oldLoader

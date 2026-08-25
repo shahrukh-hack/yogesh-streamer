@@ -179,12 +179,18 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(
 
             val settings = ctx.getApiSettings()
 
-            val notFilteredBySelectedTypes = selectedApis.filter { name ->
-                settings.contains(name)
-            }.map { name ->
+            val allActiveProviders = if (selectedApis.isEmpty()) {
+                settings
+            } else {
+                selectedApis.filter { settings.contains(it) }.ifEmpty { settings }
+            }
+
+            val notFilteredBySelectedTypes = allActiveProviders.map { name ->
                 name to getApiFromNameNull(name)?.supportedTypes
             }.filter { (_, types) ->
                 types?.any { preferredTypes.contains(it.ordinal) } == true
+            }.ifEmpty {
+                allActiveProviders.map { name -> name to getApiFromNameNull(name)?.supportedTypes }
             }
 
             searchViewModel.searchAndCancel(

@@ -1,6 +1,6 @@
 # Yogesh Streamer
 
-[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v5.0.3.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.0.3/YogeshStreamer-v5.0.3.apk)
+[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v5.0.4.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.0.4/YogeshStreamer-v5.0.4.apk)
 [![Latest Release](https://img.shields.io/github/v/release/shahrukh-hack/yogesh-streamer?style=for-the-badge&color=7C3AED)](https://github.com/shahrukh-hack/yogesh-streamer/releases/latest)
 
 **Yogesh Streamer** is an Android media center and streaming player engineered for performance, modularity, and freedom.
@@ -13,7 +13,7 @@
 
 Anyone can download the ready-to-install APK directly:
 
-* **Direct APK Download (Latest Release v5.0.3):** **[Download YogeshStreamer-v5.0.3.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.0.3/YogeshStreamer-v5.0.3.apk)**
+* **Direct APK Download (Latest Release v5.0.4):** **[Download YogeshStreamer-v5.0.4.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.0.4/YogeshStreamer-v5.0.4.apk)**
 * **All Releases:** [View Releases Page](https://github.com/shahrukh-hack/yogesh-streamer/releases)
 
 ---

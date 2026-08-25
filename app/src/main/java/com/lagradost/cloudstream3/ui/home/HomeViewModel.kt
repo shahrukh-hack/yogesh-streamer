@@ -527,10 +527,18 @@ class HomeViewModel : ViewModel() {
                 DataStoreHelper.currentHomePage = noneApi.name
                 loadAndCancel(noneApi)
             } else if (preferredApiName == randomApi.name || preferredApiName == null || api == null || preferredApiName == noneApi.name) {
-                // Automatically find and load the best available provider with a homepage
-                val validAPIs = (context?.filterProviderByPreferredMedia() ?: apis).filter { it.hasMainPage && it.name != noneApi.name }
+                // Automatically find and load the best available Movie/Series provider with a homepage
+                val isAnimeApi = { api: MainAPI -> 
+                    val lower = api.name.lowercase()
+                    lower.contains("anime") || lower.contains("zoro") || lower.contains("gogo") || lower.contains("pahe") || (api.supportedTypes.contains(TvType.Anime) && !api.supportedTypes.contains(TvType.Movie))
+                }
+                val validAPIs = (context?.filterProviderByPreferredMedia() ?: apis)
+                    .filter { it.hasMainPage && it.name != noneApi.name && !isAnimeApi(it) }
+                    .ifEmpty { (context?.filterProviderByPreferredMedia() ?: apis).filter { it.hasMainPage && it.name != noneApi.name } }
+
                 if (validAPIs.isNotEmpty()) {
-                    val selected = validAPIs.firstOrNull { it.name == "SoraStream" || it.name == "HDToday" || it.name == "FlixHQ" } ?: validAPIs.first()
+                    val priorityList = listOf("HDToday", "SoraStream", "FlixHQ", "MovieBox", "SuperStream", "BollyFlix", "VegaMovies", "HindiHD", "ShowFlix")
+                    val selected = validAPIs.firstOrNull { priorityList.contains(it.name) } ?: validAPIs.first()
                     loadAndCancel(selected)
                     if (fromUI) DataStoreHelper.currentHomePage = selected.name
                 } else if (PluginManager.loadedOnlinePlugins || PluginManager.isSafeMode()) {
