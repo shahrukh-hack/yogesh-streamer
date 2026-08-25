@@ -966,6 +966,7 @@ object PluginManager {
         } catch (e: Exception) {
             logError(e)
             return null
+        }
     }
 }
 
