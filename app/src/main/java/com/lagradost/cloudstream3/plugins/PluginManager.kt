@@ -487,9 +487,11 @@ object PluginManager {
                 if (currentOnline.none { it.internalName == internalName }) {
                     currentOnline.add(
                         PluginData(
-                            filePath = targetFile.absolutePath,
+                            internalName = internalName,
                             url = "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/$assetName",
-                            internalName = internalName
+                            isOnline = true,
+                            filePath = targetFile.absolutePath,
+                            version = 1
                         )
                     )
                     changed = true
