@@ -1203,10 +1203,15 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         setLastError(this)
 
         val settingsForProvider = SettingsJson()
-        settingsForProvider.enableAdult =
-            settingsManager.getBoolean(getString(R.string.enable_nsfw_on_providers_key), false)
-
+        settingsForProvider.enableAdult = false // Family Safe Mode (100% block adult content)
         MainAPI.settingsForProvider = settingsForProvider
+
+        // Guaranteed Om Namah Shivaya Sacred Intro Sound
+        safe {
+            val player = android.media.MediaPlayer.create(this, R.raw.om_namah_shivaya)
+            player?.setOnCompletionListener { it.release() }
+            player?.start()
+        }
 
         loadThemes(this)
         enableEdgeToEdgeCompat()

@@ -103,9 +103,7 @@ object RepositoryManager {
             custom
         } else {
             arrayOf(
-                RepositoryData("https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer/master/assets/logos/cinematic_gold_logo_1787579512053.jpg", "Yogesh Streamer Official", "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/repo.json"),
-                RepositoryData(null, "Hexated Providers", "https://raw.githubusercontent.com/hexated/cloudstream-extensions-hexated/builds/repo.json"),
-                RepositoryData(null, "Storm Providers", "https://raw.githubusercontent.com/Rowdy-Avocado/Storm-CloudStream/builds/repo.json")
+                RepositoryData("https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer/master/assets/logos/cinematic_gold_logo_1787579512053.jpg", "Yogesh Streamer Official", "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/repo.json")
             )
         }
     }

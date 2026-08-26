@@ -466,6 +466,40 @@ object PluginManager {
     suspend fun ___DO_NOT_CALL_FROM_A_PLUGIN_loadAllOnlinePlugins(context: Context) {
         assertNonRecursiveCallstack()
 
+        // Auto-extract and register bundled plugins on startup
+        safe {
+            val bundledFolder = File(context.filesDir, "bundled_plugins").apply { mkdirs() }
+            val bundledAssets = context.assets.list("plugins") ?: emptyArray()
+            val currentOnline = getPluginsOnline().toMutableList()
+            var changed = false
+
+            for (assetName in bundledAssets) {
+                if (!assetName.endsWith(".cs3")) continue
+                val targetFile = File(bundledFolder, assetName)
+                if (!targetFile.exists() || targetFile.length() == 0L) {
+                    context.assets.open("plugins/$assetName").use { input ->
+                        targetFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                }
+                val internalName = assetName.removeSuffix(".cs3")
+                if (currentOnline.none { it.internalName == internalName }) {
+                    currentOnline.add(
+                        PluginData(
+                            filePath = targetFile.absolutePath,
+                            url = "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/$assetName",
+                            internalName = internalName
+                        )
+                    )
+                    changed = true
+                }
+            }
+            if (changed) {
+                setKey(PLUGINS_KEY, currentOnline.toTypedArray())
+            }
+        }
+
         // Load all plugins as fast as possible!
         (getPluginsOnline()).toList().amap { pluginData ->
             loadPlugin(

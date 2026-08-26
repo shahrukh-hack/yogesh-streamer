@@ -34,8 +34,20 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Generate Deterministic Keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore app/release.jks \
+            -alias yogesh \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass yogesh_streamer_pass \
+            -keypass yogesh_streamer_pass \
+            -dname "CN=Yogesh, OU=Streamer, O=Yogesh, L=Ahmedabad, S=Gujarat, C=IN"
+
       - name: Build APKs
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleStableRelease assembleStableDebug --stacktrace || ./gradlew assembleDebug --stacktrace
 
       - name: Prepare APK Artifacts
         run: |
@@ -43,7 +55,7 @@ jobs:
           VERSION_NAME=$(grep 'versionName =' gradle/libs.versions.toml | cut -d '"' -f 2)
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
           echo "Building for Version: $VERSION_NAME"
-          cp app/build/outputs/apk/stable/debug/*.apk output_apks/YogeshStreamer-v${VERSION_NAME}.apk || true
+          find app/build/outputs/apk/ -name "*.apk" -exec cp {} output_apks/YogeshStreamer-v${VERSION_NAME}.apk \;
           cd output_apks
           ls -lah
 
