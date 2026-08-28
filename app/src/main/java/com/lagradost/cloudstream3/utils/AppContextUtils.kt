@@ -494,8 +494,7 @@ object AppContextUtils {
         }
         return data
     }
-
-        fun isContentFamilySafe(title: String?): Boolean {
+    fun isContentFamilySafe(title: String?): Boolean {
         if (title.isNullOrBlank()) return true
         val lower = title.lowercase()
         val forbidden = listOf(
@@ -505,27 +504,23 @@ object AppContextUtils {
         )
         return forbidden.none { lower.contains(it) }
     }
+
     fun Context.filterHomePageListByFilmQuality(data: HomePageList): HomePageList {
-        // Filter results omitting entries with certain quality
-        if (data.list.isNotEmpty()) {
-            val filteredSearchQuality = PreferenceManager.getDefaultSharedPreferences(this)
-                ?.getStringSet(getString(R.string.pref_filter_search_quality_key), setOf())
-                ?.mapNotNull { entry ->
-                    entry.toIntOrNull() ?: return@mapNotNull null
-                } ?: listOf()
-            if (filteredSearchQuality.isNotEmpty()) {
-                return HomePageList(
-                    name = data.name,
-                    isHorizontalImages = data.isHorizontalImages,
-                    list = data.list.filter { item -> isContentFamilySafe(item.name) && 
-                        val searchQualVal = item.quality?.ordinal ?: -1
-                        //Log.i("filterSearch", "QuickSearch item => ${item.toJson()}")
-                        !filteredSearchQuality.contains(searchQualVal)
-                    }
-                )
-            }
+        if (data.list.isEmpty()) return data
+        val filteredSearchQuality = PreferenceManager.getDefaultSharedPreferences(this)
+            ?.getStringSet(getString(R.string.pref_filter_search_quality_key), setOf())
+            ?.mapNotNull { it.toIntOrNull() } ?: listOf()
+
+        val safeList = data.list.filter { item ->
+            val searchQualVal = item.quality?.ordinal ?: -1
+            isContentFamilySafe(item.name) && !filteredSearchQuality.contains(searchQualVal)
         }
-        return data
+
+        return HomePageList(
+            name = data.name,
+            isHorizontalImages = data.isHorizontalImages,
+            list = safeList
+        )
     }
 
     fun Activity.loadRepository(url: String) {
@@ -932,4 +927,6 @@ object AppContextUtils {
         return currentAudioFocusRequest
     }
 }
+
+
 
