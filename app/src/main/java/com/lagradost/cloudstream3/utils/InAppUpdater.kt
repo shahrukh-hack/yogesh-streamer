@@ -1,4 +1,4 @@
-﻿package com.lagradost.cloudstream3.utils
+package com.lagradost.cloudstream3.utils
 
 import android.app.Activity
 import android.content.Context
