@@ -502,8 +502,11 @@ object PluginManager {
             }
         }
 
-        // Load all plugins as fast as possible!
-        (getPluginsOnline()).toList().amap { pluginData ->
+                // Load only active default plugins (MovieBox & CastleTV) on startup.
+        // Other bundled extensions are stored in plugins so users can toggle them one at a time.
+        val defaultActive = listOf("MovieBoxProviderIN", "CastleTvProvider")
+        val activePlugins = getPluginsOnline().filter { defaultActive.contains(it.internalName) }
+        activePlugins.amap { pluginData ->
             loadPlugin(
                 context,
                 File(pluginData.filePath),
@@ -1033,3 +1036,4 @@ class PluginSafeContext(base: Context) : ContextWrapper(base) {
         }
     }
 }
+
