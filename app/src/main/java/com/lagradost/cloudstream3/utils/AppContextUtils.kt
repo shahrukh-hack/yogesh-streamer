@@ -1,4 +1,4 @@
-package com.lagradost.cloudstream3.utils
+﻿package com.lagradost.cloudstream3.utils
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -495,6 +495,16 @@ object AppContextUtils {
         return data
     }
 
+        fun isContentFamilySafe(title: String?): Boolean {
+        if (title.isNullOrBlank()) return true
+        val lower = title.lowercase()
+        val forbidden = listOf(
+            "pinoy", "tagalog", "vivamax", "adult", "18+", "erotic", "hotshots",
+            "ullu", "kooku", "rabbit", "bigshots", "uncensored", "softcore",
+            "desipapa", "chatur", "primeplay", "boommovie", "gupt"
+        )
+        return forbidden.none { lower.contains(it) }
+    }
     fun Context.filterHomePageListByFilmQuality(data: HomePageList): HomePageList {
         // Filter results omitting entries with certain quality
         if (data.list.isNotEmpty()) {
@@ -507,7 +517,7 @@ object AppContextUtils {
                 return HomePageList(
                     name = data.name,
                     isHorizontalImages = data.isHorizontalImages,
-                    list = data.list.filter { item ->
+                    list = data.list.filter { item -> isContentFamilySafe(item.name) && 
                         val searchQualVal = item.quality?.ordinal ?: -1
                         //Log.i("filterSearch", "QuickSearch item => ${item.toJson()}")
                         !filteredSearchQuality.contains(searchQualVal)
@@ -922,3 +932,4 @@ object AppContextUtils {
         return currentAudioFocusRequest
     }
 }
+
