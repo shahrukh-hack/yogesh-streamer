@@ -503,7 +503,7 @@ object PluginManager {
         }
 
         // Load only MovieBox on startup. All others must be installed/enabled from Settings > Extensions.
-        val defaultActive = listOf("MovieBoxProviderIN")
+        val defaultActive = listOf("CastleTvProvider")
         val activePlugins = getPluginsOnline().filter { defaultActive.contains(it.internalName) }
         activePlugins.amap { pluginData ->
             loadPlugin(
@@ -1035,5 +1035,6 @@ class PluginSafeContext(base: Context) : ContextWrapper(base) {
         }
     }
 }
+
 
 

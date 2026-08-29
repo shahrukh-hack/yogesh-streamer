@@ -432,44 +432,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(
         }
 
 
-        // Wire up Trending Searches and Genre Cards clicks
-        val genreContainer = binding.searchGenreGridScroll.findViewById<View>(R.id.search_genre_container)
-        genreContainer?.let { root ->
-            root.findViewById<View>(R.id.trending_pushpa)?.setOnClickListener {
-                binding.mainSearch.setQuery("Pushpa 2", true)
-            }
-            root.findViewById<View>(R.id.trending_ipl)?.setOnClickListener {
-                binding.mainSearch.setQuery("IPL", true)
-            }
-            root.findViewById<View>(R.id.trending_gujarati)?.setOnClickListener {
-                binding.mainSearch.setQuery("Gujarati", true)
-            }
-            root.findViewById<View>(R.id.trending_bollywood)?.setOnClickListener {
-                binding.mainSearch.setQuery("Stree 2", true)
-            }
-            root.findViewById<View>(R.id.genre_card_action)?.setOnClickListener {
-                binding.mainSearch.setQuery("Action", true)
-            }
-            root.findViewById<View>(R.id.genre_card_gujarati)?.setOnClickListener {
-                binding.mainSearch.setQuery("Gujarati", true)
-            }
-            root.findViewById<View>(R.id.genre_card_bollywood)?.setOnClickListener {
-                binding.mainSearch.setQuery("Bollywood", true)
-            }
-            root.findViewById<View>(R.id.genre_card_south)?.setOnClickListener {
-                binding.mainSearch.setQuery("South Hindi", true)
-            }
-            root.findViewById<View>(R.id.genre_card_sports)?.setOnClickListener {
-                binding.mainSearch.setQuery("Cricket", true)
-            }
-            root.findViewById<View>(R.id.genre_card_anime)?.setOnClickListener {
-                binding.mainSearch.setQuery("Anime", true)
-            }
-        }
-
         binding.mainSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                binding.searchGenreGridScroll.isVisible = false
+                // binding.searchGenreGridScroll.isVisible = false
                 search(query)
                 searchViewModel.clearSuggestions()
 
@@ -743,3 +708,4 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(
         searchViewModel.updateHistory()
     }
 }
+
