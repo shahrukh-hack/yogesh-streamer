@@ -538,7 +538,7 @@ class HomeViewModel : ViewModel() {
                     .ifEmpty { (context?.filterProviderByPreferredMedia() ?: apis).filter { it.hasMainPage && it.name != noneApi.name } }
 
                 if (validAPIs.isNotEmpty()) {
-                    val priorityList = listOf("HDToday", "SoraStream", "FlixHQ", "MovieBox", "SuperStream", "BollyFlix", "VegaMovies", "HindiHD", "ShowFlix")
+                    val priorityList = listOf("CastleTV", "CastleTvProvider")
                     val selected = validAPIs.firstOrNull { priorityList.contains(it.name) } ?: validAPIs.first()
                     loadAndCancel(selected)
                     if (fromUI) DataStoreHelper.currentHomePage = selected.name
@@ -557,3 +557,4 @@ class HomeViewModel : ViewModel() {
             reloadAccount()
         }
 }
+
