@@ -502,15 +502,17 @@ object PluginManager {
             }
         }
 
-        // Load only MovieBox on startup. All others must be installed/enabled from Settings > Extensions.
-        val defaultActive = listOf("CastleTvProvider")
-        val activePlugins = getPluginsOnline().filter { defaultActive.contains(it.internalName) }
-        activePlugins.amap { pluginData ->
-            loadPlugin(
-                context,
-                File(pluginData.filePath),
-                pluginData
-            )
+                // Load all saved online plugins (starts with CastleTvProvider on fresh install, and keeps any user-installed/enabled plugins across restarts)
+        val savedPlugins = getPluginsOnline()
+        savedPlugins.amap { pluginData ->
+            val file = File(pluginData.filePath)
+            if (file.exists()) {
+                loadPlugin(
+                    context,
+                    file,
+                    pluginData
+                )
+            }
         }
     }
 
@@ -1035,6 +1037,8 @@ class PluginSafeContext(base: Context) : ContextWrapper(base) {
         }
     }
 }
+
+
 
 
 
