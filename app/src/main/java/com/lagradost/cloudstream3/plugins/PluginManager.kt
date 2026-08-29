@@ -466,7 +466,7 @@ object PluginManager {
     suspend fun ___DO_NOT_CALL_FROM_A_PLUGIN_loadAllOnlinePlugins(context: Context) {
         assertNonRecursiveCallstack()
 
-        // Auto-extract and register bundled plugins on startup
+                // Auto-extract and register strictly MovieBox on initial startup
         safe {
             val bundledFolder = File(context.filesDir, "bundled_plugins").apply { mkdirs() }
             val bundledAssets = context.assets.list("plugins") ?: emptyArray()
@@ -502,9 +502,8 @@ object PluginManager {
             }
         }
 
-                // Load only active default plugins (MovieBox & CastleTV) on startup.
-        // Other bundled extensions are stored in plugins so users can toggle them one at a time.
-        val defaultActive = listOf("MovieBoxProviderIN", "CastleTvProvider")
+        // Load only MovieBox on startup. All others must be installed/enabled from Settings > Extensions.
+        val defaultActive = listOf("MovieBoxProviderIN")
         val activePlugins = getPluginsOnline().filter { defaultActive.contains(it.internalName) }
         activePlugins.amap { pluginData ->
             loadPlugin(
@@ -1036,4 +1035,5 @@ class PluginSafeContext(base: Context) : ContextWrapper(base) {
         }
     }
 }
+
 
