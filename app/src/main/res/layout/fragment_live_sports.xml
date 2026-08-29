@@ -81,7 +81,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="Live sports channels and cricket feeds from Cricify, SKTech, Sportzx and PublicSports will show up here automatically during live events."
-                android:textColor="@color/gray_300"
+                android:textColor="?attr/textColor"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -98,3 +98,4 @@
             tools:listitem="@layout/homepage_parent" />
     </LinearLayout>
 </FrameLayout>
+
