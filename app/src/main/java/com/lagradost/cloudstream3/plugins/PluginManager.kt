@@ -503,8 +503,8 @@ object PluginManager {
         }
 
                 // Load all saved online plugins (starts with CastleTvProvider on fresh install, and keeps any user-installed/enabled plugins across restarts)
-        val savedPlugins = getPluginsOnline()
-        savedPlugins.amap { pluginData ->
+                val savedPlugins: List<PluginData> = getPluginsOnline().toList()
+        savedPlugins.amap { pluginData: PluginData ->
             val file = File(pluginData.filePath)
             if (file.exists()) {
                 loadPlugin(
@@ -1037,6 +1037,7 @@ class PluginSafeContext(base: Context) : ContextWrapper(base) {
         }
     }
 }
+
 
 
 
