@@ -50,9 +50,9 @@ jobs:
             
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add app/release.jks
-            git commit -m "💎 Permanently lock in release.jks signing key for seamless OTA updates" || true
-            git push origin HEAD:master || true
+            git add -f app/release.jks
+            git commit -m "ðŸ’Ž Permanently lock in release.jks signing key for seamless OTA updates" || true
+            git push origin HEAD:${{ github.ref_name }} || true
           else
             echo "Permanent app/release.jks exists. Reusing identical cryptographic signature."
           fi
@@ -87,3 +87,4 @@ jobs:
           draft: false
           prerelease: false
           generate_release_notes: true
+
