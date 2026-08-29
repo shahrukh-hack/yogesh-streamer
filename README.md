@@ -4,13 +4,13 @@
 [![Latest Release](https://img.shields.io/github/v/release/shahrukh-hack/yogesh-streamer?style=for-the-badge&color=7C3AED)](https://github.com/shahrukh-hack/yogesh-streamer/releases/latest)
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20Android%20TV%20%7C%20FireStick-22C55E?style=for-the-badge&logo=android)](https://github.com/shahrukh-hack/yogesh-streamer/releases)
 
-**Yogesh Streamer** is a next-generation Android & Android TV media center engineered for extreme performance, modularity, and high-speed streaming. Built upon the powerful open-source CloudStream media foundation, it delivers a custom luxury interface, dedicated Live Sports tracking, permanent extension persistence, and enhanced video link decoders.
+**Yogesh Streamer** is an open-source media player, streaming aggregation client, and entertainment center designed for Android, Android TV, and FireStick devices. Built upon a modular engine, it offers customizable user interfaces, high-speed playback decoders, dedicated live sections, and complete extension flexibility.
 
 ---
 
 ## 📥 Direct Download & Installation
 
-Anyone can download the ready-to-install APK directly without requiring a login:
+Anyone can download the ready-to-install APK directly:
 
 * 🚀 **Latest Release (v5.2.5 APK):** **[Download YogeshStreamer-v5.2.5.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.2.5/YogeshStreamer-v5.2.5.apk)**
 * 📦 **All Releases & Archives:** [View GitHub Releases](https://github.com/shahrukh-hack/yogesh-streamer/releases)
@@ -19,84 +19,80 @@ Anyone can download the ready-to-install APK directly without requiring a login:
 
 ## ✨ Key Features & Highlights
 
-- 🎬 **Cinematic "YM" Video Intro**:
-  - Fullscreen 3D Marvel/Prime Video-style animated intro featuring the royal **YM (Yogesh & Monika)** gold crest and holographic cinema/cricket reels.
-  - Synchronized with the sacred **Om Namah Shivaya** opening chime.
-  - **1-Click Skip**: Press **OK**, **Back**, or any remote key (or tap the phone screen) to jump straight to the Home Screen.
+- 🎬 **Cinematic Startup Video Intro**:
+  - Fullscreen 3D animated studio intro featuring glowing golden branding and holographic cinema reels.
+  - Synchronized with the sacred opening sound.
+  - **1-Click Skip**: Press **OK**, **Back**, or any remote key (or tap the screen) to immediately jump to the Home Screen.
 - 🏏 **Dedicated "Live Sports" Section**:
-  - Direct Live Sports navigation tab on both Phone (bottom navigation bar) and Android TV (navigation rail).
-  - Aggregates live cricket matches, football leagues, and sports TV channels from dedicated sports providers (**Cricify**, **SKTech**, **Sportzx**, **PublicSports**).
-- 🏰 **Strict Startup Provider Lock (CastleTV Only)**:
-  - Fresh installs package and load **strictly CastleTV** by default.
-  - Zero unwanted background downloading of unused extensions at launch.
-  - All other 39 extensions stay cleanly in the online repository catalog ready for on-demand installation under **Settings → Extensions**.
-- 🔘 **Android TV Remote Navigation & Switcher**:
+  - Built-in Live Sports section on both Phone (bottom navigation bar) and Android TV (navigation rail).
+  - Aggregates live match feeds, sports scorecards, and live channels with 1-click video playback.
+- ⚡ **Optimized Initial Startup**:
+  - Default clean launch with zero automatic background downloading of unused extensions.
+  - All extension modules remain cleanly in the online repository catalog ready for on-demand installation under **Settings → Extensions**.
+- 🔘 **Android TV Remote Navigation & Source Switcher**:
   - Fully optimized D-pad remote navigation.
-  - Interactive **"Select Provider"** button on the TV home header to switch catalogs in real time with 1 click.
+  - Interactive source selector on the TV header to switch catalogs in real time with 1 click.
 - 🎨 **Luxury Gold Branding**:
-  - Custom Yogesh Streamer luxury gold 16:9 banner for Android TV / Leanback launcher and gold monogram launcher icons for mobile.
-- ⚡ **Enhanced Cloud Video Link Extractors**:
-  - Built-in decoders for **HubCloud**, **GDFlix**, **DriveSeed**, **BuzzServer**, **PixelDrain API**, **StreamTape**, and **VidHide** for fast, buffer-free playback.
+  - Custom Yogesh Streamer 16:9 banner for Android TV / Leanback launcher and gold monogram icons for mobile.
+- 🚀 **High-Speed Video Link Resolvers**:
+  - Built-in multi-host decoders for direct, buffer-free playback across cloud servers, direct video streams, and IPTV playlists.
 - 🔄 **1-Tap In-App OTA Updater**:
   - Update your Phone or Android TV directly inside the app under **Settings → Updates**.
 
 ---
 
-## 📜 Comprehensive Version Changelog
+## 📜 Version Changelog
 
-### 🚀 [v5.2.5] — YM Cinematic Video Intro & CastleTV Home Lock
-* **Added Fullscreen YM Video Intro**: Features 3D Marvel/Prime Video-style animation with the royal **YM (Yogesh & Monika)** gold crest and *Om Namah Shivaya* sacred audio.
-* **1-Click Skip**: Any D-pad key, remote click, or touch tap instantly skips the intro to the Home Screen.
-* **Strict Startup Provider Lock**: Ensured **CastleTV** is strictly the primary default provider loaded on fresh launches.
-* **Clean On-Demand Extension State**: All other 39 extensions display the **Download icon (📥)** in Extensions settings.
+### 🚀 [v5.2.5] — Cinematic Video Intro & Streamlined Startup
+* **Added Fullscreen Video Intro**: Features 3D animated intro with sacred audio and 1-click remote skip.
+* **Optimized Initial Startup**: Streamlined default home loading with zero automatic background extension downloads.
+* **Clean On-Demand Extension State**: Uninstalled extensions display the **Download icon (📥)** in Extensions settings.
 
 ### 🚀 [v5.2.4] — Video Link Resolver & Cloud Extractor Overhaul
-* **Enhanced HubCloud & DriveSeed Decoders**: Added support for modern cloud domains (`hubcloud.ink`, `hubcloud.lol`, `hubcloud.art`, `hubcloud.dad`).
-* **PixelDrain API Direct Stream**: High-speed direct stream parsing (`https://pixeldrain.com/api/file/{id}?download`) bypassing timer countdowns.
-* **BuzzServer Redirect Resolution**: Handled `hx-redirect` and `location` headers directly to stream HDHub4u, VegaMovies, Bollyflix, and UHDmovies releases.
+* **Enhanced Cloud Decoders**: Added support for modern cloud domains, direct cloud streams, and token resolvers.
+* **Direct Stream Decoders**: High-speed direct stream parsing bypassing timer countdowns.
+* **Redirect Handlers**: Handled redirect and location headers directly for fast video playback.
 
-### 🚀 [v5.2.3] — Live Sports Aggregator Integration
-* **Dedicated Live Sports Section**: Integrated `LiveSportsFragment` aggregating live cricket and sports events across installed sports providers.
-* **Added Sports Navigation Tab**: Deployed custom sports vector icon to Mobile bottom nav and Android TV rail.
+### 🚀 [v5.2.3] — Live Sports Section Integration
+* **Dedicated Live Sports Section**: Integrated sports aggregator for live events and sports channels.
+* **Sports Navigation Tab**: Deployed custom sports vector icon to Mobile bottom nav and Android TV rail.
 
 ### 🚀 [v5.1.9] — Plugin Persistence Lifecycle Fix
-* **Permanent User Extensions**: Fixed plugin storage lifecycle so user-installed extensions persist permanently across app restarts.
-* **Type Cleanliness**: Resolved Kotlin types in `PluginManager.kt`.
+* **Permanent User Extensions**: Fixed storage lifecycle so user-installed extensions persist permanently across app restarts.
+* **Type Cleanliness**: Resolved Kotlin types in plugin manager.
 
-### 🚀 [v5.1.8] — Android TV Home Provider Dropdown
-* **Restored TV Home Switcher**: Added `home_preview_change_api` to `fragment_home_head_tv.xml` with dynamic provider name binding.
-* **D-Pad Focus**: Enabled remote control click navigation to bring up the provider switcher dialog on Android TV.
+### 🚀 [v5.1.8] — Android TV Home Source Dropdown
+* **Restored TV Home Switcher**: Added source switcher to TV home header with dynamic name binding and D-pad remote focus.
 
-### 🚀 [v5.1.7] — Yogesh Streamer Android TV Banner
-* **True PNG Banners**: Generated valid 320x180 bitmaps across all mipmap densities replacing default icons on Leanback launchers.
+### 🚀 [v5.1.7] — Custom Android TV Banner
+* **True PNG Banners**: Generated valid 320x180 bitmaps across all mipmap densities for Leanback launchers.
 
 ### 🚀 [v5.1.5] — Android TV ViewBinding Stability
-* **Fixed TV Startup Crash**: Synchronized ViewBinding IDs (`home_api_holder`) across mobile and TV layout hierarchies.
+* **Fixed TV Startup Crash**: Synchronized ViewBinding IDs across mobile and TV layout hierarchies.
 
-### 🚀 [v5.1.0 – v5.1.1] — Permanent Keystore Lock & Single-Plugin Startup
-* **Locked Keystore in Git**: Preserved `app/release.jks` permanently to ensure zero signature conflict errors during in-app updates.
-* **Initial Asset Bundler**: Streamlined startup asset extraction to strictly load `CastleTvProvider.cs3`.
+### 🚀 [v5.1.0 – v5.1.1] — Permanent Keystore Lock & Build Stability
+* **Locked Keystore in Git**: Preserved signing key permanently to ensure zero signature conflict errors during in-app updates.
 
 ### 🚀 [v5.0.0 – v5.0.9] — Foundation Release & Custom UI
 * **Brand Overhaul**: Rebranded entire UI, strings, theme colors, and layout structure to **Yogesh Streamer**.
-* **Sacred Om Namah Shivaya Startup Audio**: Integrated startup chime.
+* **Sacred Startup Audio**: Integrated startup chime.
 * **Dual Layout Engine**: Adaptive layouts supporting Phones, Tablets, Emulators, and Android TV / Fire TV sticks.
 
 ---
 
 ## 🔌 Extensions & Repositories
 
-Yogesh Streamer is built on the **CloudStream** extension architecture. You can install extensions from the official repository or third-party community sources:
+Yogesh Streamer is built on a modular extension architecture. You can install extensions from the official repository or third-party community sources:
 
-* **Official Yogesh Streamer Repository**:
+* **Official Extensions Repository**:
   ```text
   https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/repo.json
   ```
-* **Supported Community Sources**: Fully compatible with **CNCV**, **PhisherRepo**, and all standard CloudStream `.cs3` repository feeds.
+* **Supported Community Sources**: Fully compatible with standard CloudStream `.cs3` repository feeds.
 
 ---
 
 ## ⚖️ Legal Disclaimer
 
 > [!NOTE]
-> **Yogesh Streamer** is an open-source media player and aggregation client based on CloudStream. It does not host, store, broadcast, or transmit any video, audio, or media content. All content is scraped and streamed directly from publicly accessible third-party servers on the internet by user-selected extensions.
+> **Yogesh Streamer** is an open-source media player client. It does not host, store, upload, cache, archive, broadcast, or transmit any video, audio, or media content on any servers. All content is scraped and streamed directly from publicly accessible third-party servers on the internet by user-selected extensions.
