@@ -31,16 +31,23 @@
 
         <LinearLayout
             android:id="@+id/home_api_holder"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical"
+            android:visibility="visible">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/home_change_api"
-                style="@style/RegularButtonTV"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="gone" />
+                style="@style/WhiteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
+                android:text="Select Provider"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_baseline_arrow_drop_down_24"
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/home_preview_reload_provider"
@@ -141,10 +148,16 @@
     <!-- Unwanted FAB clutter permanently hidden -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/home_api_fab"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        tools:visibility="gone" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:text="Select Provider"
+        android:textColor="@color/white"
+        app:backgroundTint="?attr/colorPrimary"
+        app:icon="@drawable/ic_baseline_arrow_drop_down_24"
+        app:iconTint="@color/white"
+        android:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/home_random"

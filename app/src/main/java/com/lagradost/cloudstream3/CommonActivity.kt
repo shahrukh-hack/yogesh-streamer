@@ -169,8 +169,13 @@ object CommonActivity {
             Log.w(TAG, "invalid showToast act = $act message = $message")
             return
         }
-        val lower = message.lowercase()
-        if (lower.contains("telegram") || lower.contains("t.me") || lower.contains("cncv") || lower.contains("cncverse") || lower.contains("subscribe") || lower.contains("join us") || lower.contains("join channel") || lower.contains("ads mode") || lower.contains("ad mode") || lower.contains("you are in ads") || lower.contains("free mode")) {
+                val lower = message.lowercase()
+        val spamWords = listOf(
+            "telegram", "t.me", "cncv", "cncverse", "subscribe", "join us",
+            "join channel", "ads mode", "ad mode", "you are in ads", "you are on ad",
+            "free mode", "ad version", "ad-version", "ads version", "phisher", "sushan"
+        )
+        if (spamWords.any { lower.contains(it) }) {
             Log.i(TAG, "Suppressed promotional plugin toast: $message")
             return
         }
@@ -613,3 +618,4 @@ object CommonActivity {
         return null
     }
 }
+
