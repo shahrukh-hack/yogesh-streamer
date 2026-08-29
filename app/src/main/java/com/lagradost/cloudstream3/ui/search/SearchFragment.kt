@@ -459,7 +459,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(
                     }
                 }
                 binding.apply {
-                    searchGenreGridScroll.isVisible = showHistory
+                    // searchGenreGridScroll.isVisible = showHistory
                     searchHistoryRecycler.isVisible = showHistory
                     searchMasterRecycler.isVisible = !showHistory && isAdvancedSearch
                     searchAutofitResults.isVisible = !showHistory && !isAdvancedSearch
@@ -708,4 +708,5 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(
         searchViewModel.updateHistory()
     }
 }
+
 
