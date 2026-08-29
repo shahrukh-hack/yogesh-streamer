@@ -8,7 +8,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.lagradost.cloudstream3.APIHolder.allProviders
+import com.lagradost.cloudstream3.APIHolder.getApiFromNameNull
+import com.lagradost.cloudstream3.APIHolder.getApiProviderLangSettings
 import com.lagradost.cloudstream3.HomePageList
+import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.SearchResponse
@@ -19,10 +22,10 @@ import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.ui.home.HomeViewModel.ExpandableHomepageList
 import com.lagradost.cloudstream3.ui.home.ParentItemAdapter
 import com.lagradost.cloudstream3.ui.search.SearchClickCallback
-import com.lagradost.cloudstream3.ui.search.SEARCH_ACTION_LOAD
+import com.lagradost.cloudstream3.ui.search.SearchHelper
 import com.lagradost.cloudstream3.ui.settings.Globals.TV
 import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
-import com.lagradost.cloudstream3.utils.AppUtils.loadSearchResult
+import com.lagradost.cloudstream3.utils.APIRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -48,9 +51,7 @@ class LiveSportsFragment : Fragment() {
         sportsAdapter = ParentItemAdapter(
             id = 0,
             clickCallback = { callback: SearchClickCallback ->
-                if (callback.action == SEARCH_ACTION_LOAD) {
-                    activity?.loadSearchResult(callback.card)
-                }
+                SearchHelper.handleSearchClickCallback(callback)
             },
             moreInfoClickCallback = { _ -> },
             expandCallback = null
@@ -82,21 +83,24 @@ class LiveSportsFragment : Fragment() {
                 for (provider in sportsProviders) {
                     try {
                         if (provider.hasMainPage) {
-                            val mainPageRes = provider.getMainPage(1)
+                            val repo = APIRepository(provider)
+                            val mainPageRes = repo.getMainPage(1, null)
                             if (mainPageRes is Resource.Success) {
-                                mainPageRes.value.filterNotNull().forEach { page ->
-                                    if (page.items.isNotEmpty()) {
-                                        allSportsRows.add(
-                                            ExpandableHomepageList(
-                                                list = HomePageList(
-                                                    name = "${provider.name} - ${page.name}",
-                                                    items = page.items
-                                                ),
-                                                name = "${provider.name} - ${page.name}",
-                                                items = page.items,
-                                                hasNext = false
+                                mainPageRes.value.forEach { homePageResponse ->
+                                    homePageResponse?.items?.forEach { pageList ->
+                                        if (pageList.list.isNotEmpty()) {
+                                            allSportsRows.add(
+                                                ExpandableHomepageList(
+                                                    list = HomePageList(
+                                                        name = "${provider.name} - ${pageList.name}",
+                                                        list = pageList.list,
+                                                        isHorizontalImages = pageList.isHorizontalImages
+                                                    ),
+                                                    currentPage = 1,
+                                                    hasNext = homePageResponse.hasNext
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
                             }
