@@ -8,10 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.lagradost.cloudstream3.APIHolder.allProviders
-import com.lagradost.cloudstream3.APIHolder.getApiFromNameNull
-import com.lagradost.cloudstream3.APIHolder.getApiProviderLangSettings
 import com.lagradost.cloudstream3.HomePageList
-import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.SearchResponse
@@ -19,16 +16,17 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.databinding.FragmentLiveSportsBinding
 import com.lagradost.cloudstream3.mvvm.Resource
 import com.lagradost.cloudstream3.mvvm.logError
+import com.lagradost.cloudstream3.ui.APIRepository
 import com.lagradost.cloudstream3.ui.home.HomeViewModel.ExpandableHomepageList
 import com.lagradost.cloudstream3.ui.home.ParentItemAdapter
 import com.lagradost.cloudstream3.ui.search.SearchClickCallback
 import com.lagradost.cloudstream3.ui.search.SearchHelper
 import com.lagradost.cloudstream3.ui.settings.Globals.TV
 import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
-import com.lagradost.cloudstream3.utils.APIRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CopyOnWriteArrayList
 
 class LiveSportsFragment : Fragment() {
     private var binding: FragmentLiveSportsBinding? = null
@@ -84,25 +82,26 @@ class LiveSportsFragment : Fragment() {
                     try {
                         if (provider.hasMainPage) {
                             val repo = APIRepository(provider)
-                            val mainPageRes = repo.getMainPage(1, null)
-                            if (mainPageRes is Resource.Success) {
-                                mainPageRes.value.forEach { homePageResponse ->
-                                    homePageResponse?.items?.forEach { pageList ->
-                                        if (pageList.list.isNotEmpty()) {
-                                            allSportsRows.add(
-                                                ExpandableHomepageList(
-                                                    list = HomePageList(
-                                                        name = "${provider.name} - ${pageList.name}",
-                                                        list = pageList.list,
-                                                        isHorizontalImages = pageList.isHorizontalImages
-                                                    ),
-                                                    currentPage = 1,
-                                                    hasNext = homePageResponse.hasNext
+                            when (val data = repo.getMainPage(1, null)) {
+                                is Resource.Success -> {
+                                    data.value.forEach { home ->
+                                        home?.items?.forEach { list ->
+                                            if (list.list.isNotEmpty()) {
+                                                allSportsRows.add(
+                                                    ExpandableHomepageList(
+                                                        list.copy(
+                                                            name = "${provider.name} - ${list.name}",
+                                                            list = CopyOnWriteArrayList(list.list)
+                                                        ),
+                                                        currentPage = 1,
+                                                        hasNext = home.hasNext
+                                                    )
                                                 )
-                                            )
+                                            }
                                         }
                                     }
                                 }
+                                else -> Unit
                             }
                         }
                     } catch (e: Exception) {
