@@ -45,8 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:text="Launch SmartTube"
-                android:focusable="true"
-                app:icon="@drawable/ic_baseline_launch_24" />
+                android:focusable="true" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/youtube_refresh_btt"
@@ -112,3 +111,4 @@
             tools:listitem="@layout/homepage_parent" />
     </LinearLayout>
 </FrameLayout>
+

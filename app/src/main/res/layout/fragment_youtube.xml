@@ -44,8 +44,7 @@
                 android:layout_height="36dp"
                 android:layout_marginEnd="8dp"
                 android:text="SmartTube TV"
-                app:cornerRadius="18dp"
-                app:icon="@drawable/ic_baseline_launch_24" />
+                app:cornerRadius="18dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/youtube_refresh_btt"
@@ -109,3 +108,4 @@
             tools:listitem="@layout/homepage_parent" />
     </LinearLayout>
 </FrameLayout>
+
