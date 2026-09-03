@@ -370,7 +370,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         }
 
         fun Context.selectHomepage(selectedApiName: String?, callback: (String) -> Unit) {
-            val validAPIs = filterProviderByPreferredMedia().toMutableList()
+            val validAPIs = (filterProviderByPreferredMedia().ifEmpty { apis.filter { it.hasMainPage } }).toMutableList()
 
             validAPIs.add(0, randomApi)
             validAPIs.add(0, noneApi)
@@ -989,3 +989,4 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         }
     }
 }
+

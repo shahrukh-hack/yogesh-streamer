@@ -1,6 +1,7 @@
 package com.lagradost.cloudstream3.ui
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
@@ -10,7 +11,6 @@ import android.widget.ImageView
 import android.widget.VideoView
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.PreferenceManager
-import com.lagradost.cloudstream3.MainActivity
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.ui.account.AccountSelectActivity
 import com.lagradost.cloudstream3.utils.StartupSoundPlayer
@@ -19,6 +19,7 @@ class SplashVideoActivity : FragmentActivity() {
 
     private var hasNavigated = false
     private var videoView: VideoView? = null
+    private var fallbackPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +31,9 @@ class SplashVideoActivity : FragmentActivity() {
         videoView = findViewById(R.id.splash_videoview)
         val fallbackImage: ImageView = findViewById(R.id.splash_fallback_image)
 
-        val videoUri = Uri.parse("android.resource://" + packageName + "/" + R.raw.om_namah_shivaya)
+        val videoUri = Uri.parse("android.resource://" + packageName + "/" + R.raw.intro_video)
 
         try {
-            // Check if there is an intro video in raw or fallback to sound + splash logo
             videoView?.apply {
                 setVideoURI(videoUri)
                 setOnPreparedListener { mp ->
@@ -44,19 +44,23 @@ class SplashVideoActivity : FragmentActivity() {
                     navigateToApp()
                 }
                 setOnErrorListener { _, _, _ ->
-                    // Fallback to playing sacred sound and navigating
+                    // Fallback to static banner + audio
                     if (playStartupSound) {
-                        StartupSoundPlayer.playStartupSound(this@SplashVideoActivity)
+                        try {
+                            fallbackPlayer = MediaPlayer.create(this@SplashVideoActivity, R.raw.om_namah_shivaya)?.apply {
+                                setOnCompletionListener { mp ->
+                                    try { mp.release() } catch (_: Exception) {}
+                                }
+                                start()
+                            }
+                        } catch (_: Exception) {}
                     }
                     fallbackImage.visibility = View.VISIBLE
-                    fallbackImage.postDelayed({ navigateToApp() }, 3000)
+                    fallbackImage.postDelayed({ navigateToApp() }, 5500)
                     true
                 }
             }
         } catch (e: Exception) {
-            if (playStartupSound) {
-                StartupSoundPlayer.playStartupSound(this)
-            }
             fallbackImage.visibility = View.VISIBLE
             fallbackImage.postDelayed({ navigateToApp() }, 3000)
         }
@@ -87,6 +91,14 @@ class SplashVideoActivity : FragmentActivity() {
             videoView?.stopPlayback()
         } catch (_: Exception) {}
 
+        try {
+            fallbackPlayer?.apply {
+                if (isPlaying) stop()
+                release()
+            }
+            fallbackPlayer = null
+        } catch (_: Exception) {}
+
         val targetIntent = Intent(this, AccountSelectActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
             data = intent.data
@@ -94,5 +106,19 @@ class SplashVideoActivity : FragmentActivity() {
         }
         startActivity(targetIntent)
         finish()
+    }
+
+    override fun onDestroy() {
+        try {
+            videoView?.stopPlayback()
+        } catch (_: Exception) {}
+        try {
+            fallbackPlayer?.apply {
+                if (isPlaying) stop()
+                release()
+            }
+            fallbackPlayer = null
+        } catch (_: Exception) {}
+        super.onDestroy()
     }
 }

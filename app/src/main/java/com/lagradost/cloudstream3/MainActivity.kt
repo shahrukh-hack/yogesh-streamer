@@ -1338,7 +1338,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                     biometricPrompt?.authenticate(prompt)
                 }
 
-                // hide background while authenticating, Sorry moms & dads 🙏
+                // hide background while authenticating, Sorry moms & dads ðŸ™
                 binding?.navHostFragment?.isInvisible = true
             }
         }
@@ -1391,9 +1391,9 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                     val autoDownloadPlugin = AutoDownloadMode.getEnum(
                         settingsManager.getInt(
                             getString(R.string.auto_download_plugins_key),
-                            AutoDownloadMode.All.value
+                            AutoDownloadMode.Disable.value
                         )
-                    ) ?: AutoDownloadMode.All
+                    ) ?: AutoDownloadMode.Disable
                     if (autoDownloadPlugin != AutoDownloadMode.Disable) {
                         PluginManager.___DO_NOT_CALL_FROM_A_PLUGIN_downloadNotExistingPluginsAndLoad(
                             this@MainActivity,
@@ -2084,3 +2084,4 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         }
     }
 }
+
