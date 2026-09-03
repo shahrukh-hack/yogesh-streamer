@@ -515,6 +515,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         val isNavVisible = listOf(
             R.id.navigation_home,
             R.id.navigation_sports,
+                R.id.navigation_youtube,
             R.id.navigation_search,
             R.id.navigation_library,
             R.id.navigation_downloads,
@@ -589,6 +590,11 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                 R.id.navigation_sports -> {
                     navRailView.menu.findItem(R.id.navigation_sports)?.isChecked = true
                     navView.menu.findItem(R.id.navigation_sports)?.isChecked = true
+                }
+                
+                R.id.navigation_youtube -> {
+                    navRailView.menu.findItem(R.id.navigation_youtube)?.isChecked = true
+                    navView.menu.findItem(R.id.navigation_youtube)?.isChecked = true
                 }
                 in listOf(
                     R.id.navigation_downloads,
@@ -1343,7 +1349,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                     biometricPrompt?.authenticate(prompt)
                 }
 
-                // hide background while authenticating, Sorry moms & dads ÃƒÂ°Ã…Â¸Ã¢â€žÂ¢Ã‚Â
+                // hide background while authenticating, Sorry moms & dads ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â
                 binding?.navHostFragment?.isInvisible = true
             }
         }
@@ -1400,6 +1406,13 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                         )
                     ) ?: AutoDownloadMode.Disable
                     // Auto-download disabled - users install plugins on-demand only
+                    safe {
+                        val ytProvider = YouTubeProvider()
+                        if (APIHolder.allProviders.none { it.name == ytProvider.name }) {
+                            APIHolder.allProviders.add(ytProvider)
+                            APIHolder.addPluginMapping(ytProvider)
+                        }
+                    }
                 }
 
                 ioSafe {
@@ -1810,6 +1823,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
             for (id in arrayOf(
                 R.id.navigation_home,
                 R.id.navigation_sports,
+                R.id.navigation_youtube,
                 R.id.navigation_search,
                 R.id.navigation_library,
                 R.id.navigation_downloads,
@@ -2085,6 +2099,8 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         }
     }
 }
+
+
 
 
 
