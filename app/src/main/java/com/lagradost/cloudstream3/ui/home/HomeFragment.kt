@@ -370,7 +370,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         }
 
         fun Context.selectHomepage(selectedApiName: String?, callback: (String) -> Unit) {
-            val validAPIs = (filterProviderByPreferredMedia().ifEmpty { apis.filter { it.hasMainPage } }).toMutableList()
+            val validAPIs = apis.filter { it.hasMainPage }.ifEmpty { apis }.toMutableList()
 
             validAPIs.add(0, randomApi)
             validAPIs.add(0, noneApi)
@@ -480,9 +480,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
                                 if (it.supportedTypes.all { type -> type == TvType.NSFW }) return@filter false
                             }
 
-                            it.hasMainPage && (isPinned || it.supportedTypes.any(
-                                preSelectedTypes::contains
-                            ))
+                            (it.hasMainPage || validAPIs.size <= 5)
                         }
                         .sortedBy { it.name.lowercase() }
 
@@ -989,4 +987,5 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         }
     }
 }
+
 

@@ -1343,7 +1343,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                     biometricPrompt?.authenticate(prompt)
                 }
 
-                // hide background while authenticating, Sorry moms & dads Ã°Å¸â„¢Â
+                // hide background while authenticating, Sorry moms & dads ÃƒÂ°Ã…Â¸Ã¢â€žÂ¢Ã‚Â
                 binding?.navHostFragment?.isInvisible = true
             }
         }
@@ -1399,12 +1399,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                             AutoDownloadMode.Disable.value
                         )
                     ) ?: AutoDownloadMode.Disable
-                    if (autoDownloadPlugin != AutoDownloadMode.Disable) {
-                        PluginManager.___DO_NOT_CALL_FROM_A_PLUGIN_downloadNotExistingPluginsAndLoad(
-                            this@MainActivity,
-                            autoDownloadPlugin
-                        )
-                    }
+                    // Auto-download disabled - users install plugins on-demand only
                 }
 
                 ioSafe {
@@ -2090,5 +2085,6 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         }
     }
 }
+
 
 
