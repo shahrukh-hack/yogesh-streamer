@@ -1,5 +1,10 @@
 package com.lagradost.cloudstream3.ui.home
 
+import android.widget.Toast
+import com.lagradost.cloudstream3.APIHolder.noneApi
+import com.lagradost.cloudstream3.CommonActivity.showToast
+import com.lagradost.cloudstream3.ui.home.HomeFragment.Companion.selectHomepage
+
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
@@ -802,5 +807,6 @@ class HomeParentItemAdapterPreview(
         }
     }
 }
+
 
 
