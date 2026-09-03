@@ -313,13 +313,6 @@
         app:enterAnim="@anim/enter_anim"
         app:popExitAnim="@anim/exit_anim"
         tools:layout="@layout/fragment_live_sports" />
-    <fragment
-        android:id="@+id/navigation_youtube"
-        android:name="com.lagradost.cloudstream3.ui.youtube.YouTubeFragment"
-        android:label="YouTube"
-        app:enterAnim="@anim/enter_anim"
-        app:popExitAnim="@anim/exit_anim"
-        tools:layout="@layout/fragment_youtube" />
 
     <fragment
         android:id="@+id/navigation_search"
@@ -715,5 +708,4 @@
         android:label="EasterEggMonkeFragment"
         tools:layout="@layout/fragment_easter_egg_monke" />
 </navigation>
-
 
