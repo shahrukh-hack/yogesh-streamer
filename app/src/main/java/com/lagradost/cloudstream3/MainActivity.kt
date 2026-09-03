@@ -514,6 +514,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
 
         val isNavVisible = listOf(
             R.id.navigation_home,
+            R.id.navigation_sports,
             R.id.navigation_search,
             R.id.navigation_library,
             R.id.navigation_downloads,
@@ -585,6 +586,10 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
              * highlight the wrong one in UI.
              */
             when (destination.id) {
+                R.id.navigation_sports -> {
+                    navRailView.menu.findItem(R.id.navigation_sports)?.isChecked = true
+                    navView.menu.findItem(R.id.navigation_sports)?.isChecked = true
+                }
                 in listOf(
                     R.id.navigation_downloads,
                     R.id.navigation_download_child,
@@ -1338,7 +1343,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                     biometricPrompt?.authenticate(prompt)
                 }
 
-                // hide background while authenticating, Sorry moms & dads ðŸ™
+                // hide background while authenticating, Sorry moms & dads Ã°Å¸â„¢Â
                 binding?.navHostFragment?.isInvisible = true
             }
         }
@@ -1809,6 +1814,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                 R.id.nav_footer_profile_card
             for (id in arrayOf(
                 R.id.navigation_home,
+                R.id.navigation_sports,
                 R.id.navigation_search,
                 R.id.navigation_library,
                 R.id.navigation_downloads,
@@ -2084,4 +2090,5 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         }
     }
 }
+
 
