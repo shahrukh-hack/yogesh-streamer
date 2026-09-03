@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_baseline_sports_24"
             android:title="Sports" />
         <item
+            android:id="@+id/navigation_youtube"
+            android:icon="@drawable/ic_youtube_badge"
+            android:title="YouTube" />
+        <item
             android:id="@+id/navigation_search"
             android:icon="@drawable/search_icon"
             android:title="@string/title_search" />

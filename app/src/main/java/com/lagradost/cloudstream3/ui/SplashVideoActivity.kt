@@ -65,8 +65,10 @@ class SplashVideoActivity : FragmentActivity() {
             fallbackImage.postDelayed({ navigateToApp() }, 3000)
         }
 
-        findViewById<View>(R.id.splash_root)?.setOnClickListener {
-            navigateToApp()
+        findViewById<View>(R.id.splash_root)?.apply {
+            setOnClickListener { navigateToApp() }
+            // Absolute safety timeout: never stay stuck on splash video screen
+            postDelayed({ navigateToApp() }, 5500)
         }
     }
 

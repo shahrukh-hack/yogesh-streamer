@@ -515,6 +515,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         val isNavVisible = listOf(
             R.id.navigation_home,
             R.id.navigation_sports,
+            R.id.navigation_youtube,
             R.id.navigation_search,
             R.id.navigation_library,
             R.id.navigation_downloads,
@@ -589,6 +590,10 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                 R.id.navigation_sports -> {
                     navRailView.menu.findItem(R.id.navigation_sports)?.isChecked = true
                     navView.menu.findItem(R.id.navigation_sports)?.isChecked = true
+                }
+                R.id.navigation_youtube -> {
+                    navRailView.menu.findItem(R.id.navigation_youtube)?.isChecked = true
+                    navView.menu.findItem(R.id.navigation_youtube)?.isChecked = true
                 }
                 in listOf(
                     R.id.navigation_downloads,
@@ -1810,6 +1815,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
             for (id in arrayOf(
                 R.id.navigation_home,
                 R.id.navigation_sports,
+                R.id.navigation_youtube,
                 R.id.navigation_search,
                 R.id.navigation_library,
                 R.id.navigation_downloads,
