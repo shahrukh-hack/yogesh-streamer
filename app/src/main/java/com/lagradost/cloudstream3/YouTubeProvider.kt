@@ -77,7 +77,7 @@ class YouTubeProvider : MainAPI() {
                 val response = app.get(fullUrl, timeout = 10).text
                 val items = tryParseJson<Map<String, Any>>(response)
                 val itemsList = tryParseJson<List<PipedStreamItem>>(
-                    mapper.writeValueAsString(items?.get("items") ?: emptyList<Any>())
+                    com.lagradost.cloudstream3.utils.AppUtils.toJson(items?.get("items") ?: emptyList<Any>())
                 ) ?: continue
 
                 if (itemsList.isNotEmpty()) {
@@ -120,4 +120,3 @@ class YouTubeProvider : MainAPI() {
         return true
     }
 }
-
