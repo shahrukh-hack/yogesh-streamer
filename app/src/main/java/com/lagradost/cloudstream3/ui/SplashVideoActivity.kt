@@ -103,8 +103,20 @@ class SplashVideoActivity : FragmentActivity() {
             fallbackPlayer = null
         } catch (_: Exception) {}
 
-        val targetIntent = Intent(this, AccountSelectActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
+        val settingsManager = PreferenceManager.getDefaultSharedPreferences(this)
+        val skipStartup = settingsManager.getBoolean(
+            getString(R.string.skip_startup_account_select_key),
+            false
+        ) || accounts.count() <= 1
+
+        val targetActivity = if (skipStartup) {
+            MainActivity::class.java
+        } else {
+            AccountSelectActivity::class.java
+        }
+
+        val targetIntent = Intent(this, targetActivity).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             data = intent.data
             intent.extras?.let { putExtras(it) }
         }

@@ -1374,21 +1374,23 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
 
         ioSafe { SafeFile.check(this@MainActivity) }
 
+        // ALWAYS extract bundled plugins and load CastleTvProvider first so Home is instant
+        ioSafe {
+            val castleLoaded = PluginManager.loadCastleTvProvider(this@MainActivity)
+            DataStoreHelper.currentHomePage = "Castle TV (Use VLC)"
+            mainPluginsLoadedEvent.invoke(castleLoaded)
+            reloadHomeEvent.invoke(true)
+        }
+
         if (PluginManager.checkSafeModeFile()) {
             safe {
                 showToast(R.string.safe_mode_file, Toast.LENGTH_LONG)
             }
-        } else if (lastError == null) {
+        } else if (lastError == null || isLayout(TV)) {
+            if (isLayout(TV)) {
+                lastError = null
+            }
             ioSafe {
-                // Immediately extract bundled plugins and load CastleTvProvider first so Home is instant
-                val castleLoaded = PluginManager.loadCastleTvProvider(this@MainActivity)
-
-                // Ensure currentHomePage points directly to Castle TV provider so there is no delay or fallback
-                DataStoreHelper.currentHomePage = "Castle TV (Use VLC)"
-
-                mainPluginsLoadedEvent.invoke(castleLoaded)
-                reloadHomeEvent.invoke(true)
-
                 ioSafe {
                     if (settingsManager.getBoolean(
                             getString(R.string.auto_update_plugins_key),
@@ -1726,17 +1728,18 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
 
         val rippleColor = ColorStateList.valueOf(getResourceColor(R.attr.colorPrimary, 0.1f))
 
-        binding?.navView?.apply {
-            itemRippleColor = rippleColor
-            itemActiveIndicatorColor = rippleColor
-            setupWithNavController(navController)
-            setOnItemSelectedListener { item ->
-                onNavDestinationSelected(
-                    item,
-                    navController
-                )
+        if (!isLayout(TV)) {
+            binding?.navView?.apply {
+                itemRippleColor = rippleColor
+                itemActiveIndicatorColor = rippleColor
+                setupWithNavController(navController)
+                setOnItemSelectedListener { item ->
+                    onNavDestinationSelected(
+                        item,
+                        navController
+                    )
+                }
             }
-
         }
 
         binding?.navRailView?.apply {

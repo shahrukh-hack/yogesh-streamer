@@ -204,8 +204,12 @@ class AccountSelectActivity : FragmentActivity(), BiometricCallback {
     @SuppressLint("UnsafeIntentLaunch")
     private fun navigateToMainActivity() {
         hasLoggedIn = true
-        // We want to propagate any intent we get here to MainActivity since this is just an intermediary
-        openActivity(MainActivity::class.java, baseIntent = intent)
+        val targetIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            data = intent?.data
+            intent?.extras?.let { putExtras(it) }
+        }
+        startActivity(targetIntent)
         finish() // Finish the account selection activity
     }
 
