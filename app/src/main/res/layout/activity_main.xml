@@ -24,7 +24,7 @@
             app:labelVisibilityMode="unlabeled"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/bottom_nav_menu"
+            app:menu="@menu/rail_nav_menu"
             app:menuGravity="center">
 
             <include layout="@layout/rail_footer"/>

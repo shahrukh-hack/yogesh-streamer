@@ -229,6 +229,8 @@ class SettingsFragment : BaseFragment<MainSettingsBinding>(
                 settingsProviders to R.id.action_navigation_global_to_navigation_settings_providers,
                 settingsUpdates to R.id.action_navigation_global_to_navigation_settings_updates,
                 settingsExtensions to R.id.action_navigation_global_to_navigation_settings_extensions,
+                settingsLibrary to R.id.navigation_library,
+                settingsDownloads to R.id.navigation_downloads,
             ).forEach { (view, navigationId) ->
                 view.apply {
                     setOnClickListener {
