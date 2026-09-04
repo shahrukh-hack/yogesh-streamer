@@ -174,7 +174,7 @@ class YouTubeFragment : Fragment() {
                     APIHolder.addPluginMapping(it)
                 }
 
-                val results = ytProvider.search(query)
+                val results = ytProvider.search(query).orEmpty()
                 val rows = if (results.isNotEmpty()) {
                     listOf(
                         ExpandableHomepageList(
