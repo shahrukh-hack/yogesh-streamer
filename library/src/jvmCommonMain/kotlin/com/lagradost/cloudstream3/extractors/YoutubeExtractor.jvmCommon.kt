@@ -51,9 +51,20 @@ actual open class YoutubeExtractor actual constructor() : ExtractorApi() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val videoStreams = info.videoOnlyStreams.orEmpty()
-        if (videoStreams.isEmpty()) return false
+        val progressiveStreams = info.videoStreams.orEmpty()
+        progressiveStreams.forEach { video ->
+            callback(
+                newExtractorLink(
+                    source = name,
+                    name = "YouTube Direct ${video.resolution ?: "${video.height}p"}",
+                    url = video.content
+                ) {
+                    quality = video.height
+                }
+            )
+        }
 
+        val videoStreams = info.videoOnlyStreams.orEmpty()
         val audioStreams = info.audioStreams.orEmpty()
         videoStreams.forEach { video ->
             callback(

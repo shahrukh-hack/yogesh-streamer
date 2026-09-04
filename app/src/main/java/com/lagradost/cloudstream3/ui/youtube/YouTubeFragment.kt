@@ -10,8 +10,10 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.widget.SearchView
 import com.lagradost.cloudstream3.APIHolder
 import com.lagradost.cloudstream3.CommonActivity.showToast
+import com.lagradost.cloudstream3.HomePageList
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.YouTubeProvider
 import com.lagradost.cloudstream3.databinding.FragmentYoutubeBinding
@@ -65,6 +67,23 @@ class YouTubeFragment : Fragment() {
         binding?.smarttubeAppLaunchBtt?.setOnClickListener {
             launchSmartTubeApp()
         }
+
+        binding?.youtubeSearchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrBlank()) {
+                    searchYouTube(query.trim())
+                    binding?.youtubeSearchView?.clearFocus()
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrBlank()) {
+                    loadYouTubeContent()
+                }
+                return true
+            }
+        })
 
         loadYouTubeContent()
     }
@@ -124,6 +143,51 @@ class YouTubeFragment : Fragment() {
                     }
                     else -> Unit
                 }
+
+                withContext(Dispatchers.Main) {
+                    binding?.youtubeLoading?.isVisible = false
+                    if (rows.isEmpty()) {
+                        binding?.youtubeEmptyState?.isVisible = true
+                    } else {
+                        binding?.youtubeEmptyState?.isVisible = false
+                        tubeAdapter?.submitList(rows)
+                    }
+                }
+            } catch (e: Exception) {
+                logError(e)
+                withContext(Dispatchers.Main) {
+                    binding?.youtubeLoading?.isVisible = false
+                    binding?.youtubeEmptyState?.isVisible = true
+                }
+            }
+        }
+    }
+
+    private fun searchYouTube(query: String) {
+        binding?.youtubeLoading?.isVisible = true
+        binding?.youtubeEmptyState?.isVisible = false
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val ytProvider = APIHolder.allProviders.firstOrNull { it is YouTubeProvider } ?: YouTubeProvider().also {
+                    APIHolder.allProviders.add(it)
+                    APIHolder.addPluginMapping(it)
+                }
+
+                val results = ytProvider.search(query)
+                val rows = if (results.isNotEmpty()) {
+                    listOf(
+                        ExpandableHomepageList(
+                            HomePageList(
+                                name = "Search Results for \"$query\"",
+                                list = CopyOnWriteArrayList(results),
+                                isHorizontalImages = true
+                            ),
+                            currentPage = 1,
+                            hasNext = false
+                        )
+                    )
+                } else emptyList()
 
                 withContext(Dispatchers.Main) {
                     binding?.youtubeLoading?.isVisible = false
