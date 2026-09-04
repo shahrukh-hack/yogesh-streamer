@@ -285,7 +285,7 @@ object PluginManager {
     }
 
     suspend fun loadCastleTvProvider(context: Context): Boolean {
-        return safe {
+        return try {
             extractAndRegisterBundledPlugins(context)
             val castleData = getPluginsOnline().firstOrNull { 
                 it.internalName.contains("Castle", ignoreCase = true) 
@@ -300,7 +300,10 @@ object PluginManager {
             if (file.exists()) {
                 loadPlugin(context, file, castleData)
             } else false
-        } ?: false
+        } catch (t: Throwable) {
+            logError(t)
+            false
+        }
     }
 
     suspend fun loadSinglePlugin(context: Context, apiName: String): Boolean {
