@@ -251,8 +251,18 @@ object QualityDataHelper {
         )
         val sourcePriority = getSourcePriority(qualityProfile, linkData?.source)
 
-        // Prioritize fast direct HLS/M3U8 streams and direct CDNs for buffer-free instant playback
-        val fastStreamBonus = if (linkData?.isM3u8 == true || linkData?.isDash == true || linkData?.url?.contains(".m3u8") == true) 10 else 0
+        // Prioritize buffer-free progressive single-streams (e.g. YouTube Direct 720p/360p) which have unified audio/video
+        // over throttled dual-channel DASH streams (1080p), ensuring zero-buffering instant playback by default.
+        val isDirectProgressive = (linkData?.source?.contains("YouTube", ignoreCase = true) == true ||
+                linkData?.name?.contains("Direct", ignoreCase = true) == true) &&
+                linkData?.audioTracks.isNullOrEmpty()
+        val fastStreamBonus = if (isDirectProgressive) {
+            15
+        } else if (linkData?.isM3u8 == true || linkData?.isDash == true || linkData?.url?.contains(".m3u8") == true) {
+            10
+        } else {
+            0
+        }
 
         return qualityPriority + sourcePriority + fastStreamBonus
     }

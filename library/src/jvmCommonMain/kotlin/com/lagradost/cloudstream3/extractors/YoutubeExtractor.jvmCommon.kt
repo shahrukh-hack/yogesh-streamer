@@ -70,7 +70,7 @@ actual open class YoutubeExtractor actual constructor() : ExtractorApi() {
             callback(
                 newExtractorLink(
                     source = name,
-                    name = "YouTube ${normalizeCodec(video.codec)}",
+                    name = "YouTube ${normalizeCodec(video.codec)} ${video.resolution ?: "${video.height}p"}",
                     url = video.content
                 ) {
                     quality = video.height

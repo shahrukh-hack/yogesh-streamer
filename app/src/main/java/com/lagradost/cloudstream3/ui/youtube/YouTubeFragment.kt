@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.appcompat.widget.SearchView
 import com.lagradost.cloudstream3.APIHolder
+import com.lagradost.cloudstream3.CloudStreamApp.Companion.getKey
+import com.lagradost.cloudstream3.CloudStreamApp.Companion.setKey
 import com.lagradost.cloudstream3.CommonActivity.showToast
 import com.lagradost.cloudstream3.HomePageList
 import com.lagradost.cloudstream3.R
@@ -32,6 +34,10 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.CopyOnWriteArrayList
 
 class YouTubeFragment : Fragment() {
+    companion object {
+        private const val YOUTUBE_LAST_SEARCH_KEY = "youtube_last_search_query"
+    }
+
     private var binding: FragmentYoutubeBinding? = null
     private var tubeAdapter: ParentItemAdapter? = null
 
@@ -121,6 +127,29 @@ class YouTubeFragment : Fragment() {
                 }
 
                 val rows = mutableListOf<ExpandableHomepageList>()
+
+                val lastSearch = getKey<String>(YOUTUBE_LAST_SEARCH_KEY)
+                if (!lastSearch.isNullOrBlank()) {
+                    try {
+                        val suggestedResults = ytProvider.search(lastSearch).orEmpty()
+                        if (suggestedResults.isNotEmpty()) {
+                            rows.add(
+                                ExpandableHomepageList(
+                                    HomePageList(
+                                        name = "Suggested for You (\"$lastSearch\")",
+                                        list = CopyOnWriteArrayList(suggestedResults),
+                                        isHorizontalImages = true
+                                    ),
+                                    currentPage = 1,
+                                    hasNext = false
+                                )
+                            )
+                        }
+                    } catch (e: Exception) {
+                        logError(e)
+                    }
+                }
+
                 val repo = APIRepository(ytProvider)
                 when (val data = repo.getMainPage(1, null)) {
                     is Resource.Success -> {
@@ -164,6 +193,7 @@ class YouTubeFragment : Fragment() {
     }
 
     private fun searchYouTube(query: String) {
+        setKey(YOUTUBE_LAST_SEARCH_KEY, query)
         binding?.youtubeLoading?.isVisible = true
         binding?.youtubeEmptyState?.isVisible = false
 
