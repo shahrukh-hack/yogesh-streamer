@@ -2,101 +2,95 @@ package com.lagradost.cloudstream3
 
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.extractors.YoutubeExtractor
-import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.mvvm.logError
-import com.fasterxml.jackson.annotation.JsonProperty
+import org.jsoup.Jsoup
+import org.jsoup.parser.Parser
 
 class YouTubeProvider : MainAPI() {
     override var name = "YouTube"
-    override var mainUrl = "https://pipedapi.kavin.rocks"
-    override val hasMainPage = false
+    override var mainUrl = "https://www.youtube.com"
+    override val hasMainPage = true
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries, TvType.Live)
 
     override val mainPage = mainPageOf(
-        "trending?region=US" to "Trending Now",
-        "trending?region=IN" to "Popular in India",
-        "trending?region=GB" to "Top Global",
-        "trending?region=CA" to "Entertainment"
-    )
-
-    data class PipedStreamItem(
-        @JsonProperty("url") val url: String? = null,
-        @JsonProperty("title") val title: String? = null,
-        @JsonProperty("thumbnail") val thumbnail: String? = null,
-        @JsonProperty("uploaderName") val uploaderName: String? = null,
-        @JsonProperty("duration") val duration: Long? = null,
+        "UCq-Fj5jknLsUf-MWSy4_brA" to "Trending Bollywood & Music (T-Series)",
+        "UCFFbwnve3yF62-tVXkTyHqg" to "Hit Songs & Soundtracks (Zee Music)",
+        "UC3gNmTGu-TTbFPpfSs5kNkg" to "Blockbuster Cinema Trailers",
+        "UCAuUUnT6oDeKwE6v1NGQxug" to "Cricket Highlights & Moments (ICC)",
+        "UCX6OQ3DkcsbYNE6H8uQQuVA" to "Global Trending Entertainment",
+        "UCbTLwN10NoCU4WDzLf1JMOA" to "YRF Bollywood Specials"
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
-        val instances = listOf(
-            "https://pipedapi.kavin.rocks",
-            "https://api.piped.privacy.com.de",
-            "https://piped-api.garudalinux.org",
-            "https://api.piped.yt"
-        )
-        
-        for (base in instances) {
-            try {
-                val fullUrl = "$base/${request.data}"
-                val response = app.get(fullUrl, timeout = 10).text
-                val items = tryParseJson<List<PipedStreamItem>>(response) ?: continue
-                if (items.isNotEmpty()) {
-                    val searchResults = items.filter { !it.url.isNullOrBlank() && !it.title.isNullOrBlank() }.map { item ->
-                        val videoId = item.url?.substringAfter("watch?v=").orEmpty()
-                        newMovieSearchResponse(
-                            name = item.title ?: "YouTube Video",
-                            url = "https://www.youtube.com/watch?v=$videoId",
-                            type = TvType.Movie
-                        ) {
-                            this.posterUrl = item.thumbnail
-                        }
+        val channelId = request.data
+        val feedUrl = "https://www.youtube.com/feeds/videos.xml?channel_id=$channelId"
+        return try {
+            val response = app.get(feedUrl, timeout = 15).text
+            val doc = Jsoup.parse(response, "", Parser.xmlParser())
+            val entries = doc.select("entry")
+            val searchResults = entries.mapNotNull { entry ->
+                val videoId = entry.selectFirst("yt|videoId")?.text()
+                    ?: entry.selectFirst("videoId")?.text()
+                    ?: entry.selectFirst("id")?.text()?.substringAfter("yt:video:")
+                val title = entry.selectFirst("title")?.text()
+                if (!videoId.isNullOrBlank() && !title.isNullOrBlank()) {
+                    newMovieSearchResponse(
+                        name = title,
+                        url = "https://www.youtube.com/watch?v=$videoId",
+                        type = TvType.Movie
+                    ) {
+                        this.posterUrl = "https://i.ytimg.com/vi/$videoId/hqdefault.jpg"
                     }
-                    return newHomePageResponse(request.name, searchResults, false)
-                }
-            } catch (e: Exception) {
-                logError(e)
+                } else null
             }
+            if (searchResults.isNotEmpty()) {
+                newHomePageResponse(request.name, searchResults, true)
+            } else null
+        } catch (e: Exception) {
+            logError(e)
+            null
         }
-        return null
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val instances = listOf(
-            "https://pipedapi.kavin.rocks",
-            "https://api.piped.privacy.com.de",
-            "https://piped-api.garudalinux.org",
-            "https://api.piped.yt"
-        )
-
-        for (base in instances) {
-            try {
-                val fullUrl = "$base/search?q=$query&filter=videos"
-                val response = app.get(fullUrl, timeout = 10).text
-                val items = tryParseJson<Map<String, Any>>(response)
-                val itemsList = tryParseJson<List<PipedStreamItem>>(
-                    mapper.writeValueAsString(items?.get("items") ?: emptyList<Any>())
-                ) ?: continue
-
-                if (itemsList.isNotEmpty()) {
-                    return itemsList.filter { !it.url.isNullOrBlank() && !it.title.isNullOrBlank() }.map { item ->
-                        val videoId = item.url?.substringAfter("watch?v=").orEmpty()
+        val cleanQuery = query.trim().replace(" ", "+")
+        val searchUrl = "https://www.youtube.com/results?search_query=$cleanQuery"
+        return try {
+            val response = app.get(
+                searchUrl,
+                headers = mapOf(
+                    "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    "Accept-Language" to "en-US,en;q=0.9"
+                ),
+                timeout = 15
+            ).text
+            val regex = Regex(""""videoId":"([a-zA-Z0-9_-]{11})".*?"title":\{"runs":\[\{"text":"([^"]+)"""")
+            val matches = regex.findAll(response).take(20).toList()
+            val results = mutableListOf<SearchResponse>()
+            val seenIds = mutableSetOf<String>()
+            for (match in matches) {
+                val videoId = match.groupValues[1]
+                val title = match.groupValues[2]
+                if (seenIds.add(videoId)) {
+                    results.add(
                         newMovieSearchResponse(
-                            name = item.title ?: "YouTube Video",
+                            name = title,
                             url = "https://www.youtube.com/watch?v=$videoId",
                             type = TvType.Movie
                         ) {
-                            this.posterUrl = item.thumbnail
+                            this.posterUrl = "https://i.ytimg.com/vi/$videoId/hqdefault.jpg"
                         }
-                    }
+                    )
                 }
-            } catch (e: Exception) {
-                logError(e)
             }
+            results
+        } catch (e: Exception) {
+            logError(e)
+            emptyList()
         }
-        return emptyList()
     }
 
     override suspend fun load(url: String): LoadResponse {
@@ -106,7 +100,9 @@ class YouTubeProvider : MainAPI() {
             url = url,
             type = TvType.Movie,
             dataUrl = url
-        )
+        ) {
+            this.posterUrl = "https://i.ytimg.com/vi/$videoId/hqdefault.jpg"
+        }
     }
 
     override suspend fun loadLinks(

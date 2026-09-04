@@ -75,9 +75,14 @@ class CloudStreamApp : Application(), SingletonImageLoader.Factory {
         // loading an image or GIF in a splash screen activity.
         // buildImageLoader(applicationContext)
 
+        val appStartTime = System.currentTimeMillis()
         ExceptionHandler(filesDir.resolve("last_error")) {
-            val intent = context!!.packageManager.getLaunchIntentForPackage(context!!.packageName)
-            startActivity(Intent.makeRestartActivityTask(intent!!.component))
+            if (System.currentTimeMillis() - appStartTime > 10000L) {
+                try {
+                    val intent = context!!.packageManager.getLaunchIntentForPackage(context!!.packageName)
+                    startActivity(Intent.makeRestartActivityTask(intent!!.component))
+                } catch (_: Throwable) {}
+            }
         }.also {
             exceptionHandler = it
             Thread.setDefaultUncaughtExceptionHandler(it)

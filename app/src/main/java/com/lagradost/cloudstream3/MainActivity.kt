@@ -1347,10 +1347,9 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         binding?.navHostFragment?.isInvisible = false
 
         if (isLayout(PHONE) && isAuthEnabled(this) && noAccounts) {
-            if (deviceHasPasswordPinLock(this)) {
-                startBiometricAuthentication(this, R.string.biometric_authentication_title, false)
-                promptInfo?.let { prompt ->
-                    biometricPrompt?.authenticate(prompt)
+            safe {
+                if (deviceHasPasswordPinLock(this)) {
+                    startBiometricAuthentication(this, R.string.biometric_authentication_title, false)
                 }
             }
         }
@@ -1386,10 +1385,8 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
             safe {
                 showToast(R.string.safe_mode_file, Toast.LENGTH_LONG)
             }
-        } else if (lastError == null || isLayout(TV)) {
-            if (isLayout(TV)) {
-                lastError = null
-            }
+        } else {
+            lastError = null
             ioSafe {
                 ioSafe {
                     if (settingsManager.getBoolean(
@@ -1424,21 +1421,6 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
 // Add your channel creation here
 
             }
-        } else {
-            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder.setTitle(R.string.safe_mode_title)
-            builder.setMessage(R.string.safe_mode_description)
-            builder.apply {
-                setPositiveButton(R.string.safe_mode_crash_info) { _, _ ->
-                    val tbBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
-                    tbBuilder.setTitle(R.string.safe_mode_title)
-                    tbBuilder.setMessage(lastError)
-                    tbBuilder.show()
-                }
-
-                setNegativeButton("Ok") { _, _ -> }
-            }
-            builder.show().setDefaultFocus()
         }
 
 
@@ -1732,7 +1714,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
             binding?.navView?.apply {
                 itemRippleColor = rippleColor
                 itemActiveIndicatorColor = rippleColor
-                setupWithNavController(navController)
+                safe { setupWithNavController(navController) }
                 setOnItemSelectedListener { item ->
                     onNavDestinationSelected(
                         item,
@@ -1754,7 +1736,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                 itemRippleColor = rippleColorTransparent
                 itemActiveIndicatorColor = rippleColor
             }
-            setupWithNavController(navController)
+            safe { setupWithNavController(navController) }
             /*if (isLayout(TV or EMULATOR)) {
                 background?.alpha = 200
             } else {
