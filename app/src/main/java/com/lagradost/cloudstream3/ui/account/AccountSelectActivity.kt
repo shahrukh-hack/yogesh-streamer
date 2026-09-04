@@ -214,6 +214,6 @@ class AccountSelectActivity : FragmentActivity(), BiometricCallback {
     }
 
     override fun onAuthenticationError() {
-        finish()
+        Log.w(BiometricAuthenticator.TAG, "Authentication error/cancelled in AccountSelectActivity")
     }
 }

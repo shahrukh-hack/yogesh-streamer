@@ -11,8 +11,10 @@ import android.widget.ImageView
 import android.widget.VideoView
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.PreferenceManager
+import com.lagradost.cloudstream3.MainActivity
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.ui.account.AccountSelectActivity
+import com.lagradost.cloudstream3.utils.DataStoreHelper.accounts
 import com.lagradost.cloudstream3.utils.StartupSoundPlayer
 
 class SplashVideoActivity : FragmentActivity() {
@@ -101,10 +103,14 @@ class SplashVideoActivity : FragmentActivity() {
             fallbackPlayer = null
         } catch (_: Exception) {}
 
-        val targetIntent = Intent(this, AccountSelectActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
+        val targetIntent = if (accounts.count() > 1) {
+            Intent(this, AccountSelectActivity::class.java)
+        } else {
+            Intent(this, MainActivity::class.java)
+        }.apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             data = intent.data
-            putExtras(intent)
+            intent.extras?.let { putExtras(it) }
         }
         startActivity(targetIntent)
         finish()

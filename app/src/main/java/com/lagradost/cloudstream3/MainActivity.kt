@@ -1344,11 +1344,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
             if (deviceHasPasswordPinLock(this)) {
                 startBiometricAuthentication(this, R.string.biometric_authentication_title, false)
 
-                promptInfo?.let { prompt ->
-                    biometricPrompt?.authenticate(prompt)
-                }
-
-                // hide background while authenticating, Sorry moms & dads ÃƒÂ°Ã…Â¸Ã¢â€žÂ¢Ã‚Â
+                // hide background while authenticating, Sorry moms & dads 🙇
                 binding?.navHostFragment?.isInvisible = true
             }
         }
@@ -1378,11 +1374,16 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
             }
         } else if (lastError == null) {
             ioSafe {
-                DataStoreHelper.currentHomePage?.let { homeApi ->
-                    mainPluginsLoadedEvent.invoke(loadSinglePlugin(this@MainActivity, homeApi))
-                } ?: run {
-                    mainPluginsLoadedEvent.invoke(false)
+                // Immediately extract bundled plugins and load CastleTvProvider first so Home is instant
+                val castleLoaded = PluginManager.loadCastleTvProvider(this@MainActivity)
+
+                // Ensure currentHomePage points directly to Castle TV provider so there is no delay or fallback
+                val currentHome = DataStoreHelper.currentHomePage
+                if (currentHome.isNullOrEmpty() || currentHome == "none" || currentHome.contains("Castle", ignoreCase = true)) {
+                    DataStoreHelper.currentHomePage = "Castle TV (Use VLC)"
                 }
+
+                mainPluginsLoadedEvent.invoke(castleLoaded)
 
                 ioSafe {
                     if (settingsManager.getBoolean(
@@ -2077,7 +2078,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
     }
 
     override fun onAuthenticationError() {
-        finish()
+        binding?.navHostFragment?.isInvisible = false
     }
 
     suspend fun checkGithubConnectivity(): Boolean {

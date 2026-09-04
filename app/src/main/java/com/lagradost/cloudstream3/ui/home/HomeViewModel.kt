@@ -538,8 +538,12 @@ class HomeViewModel : ViewModel() {
                     .ifEmpty { (context?.filterProviderByPreferredMedia() ?: apis).filter { it.hasMainPage && it.name != noneApi.name } }
 
                 if (validAPIs.isNotEmpty()) {
-                    val priorityList = listOf("CastleTvProvider", "CastleTV", "Castle Play", "Castle", "MovieBox", "MovieBoxProviderIN")
-                    val selected = validAPIs.firstOrNull { priorityList.contains(it.name) } ?: validAPIs.first()
+                    val priorityList = listOf(
+                        "Castle TV (Use VLC)", "CastleTvProvider", "CastleTV", "Castle TV", "Castle Play", "Castle", "MovieBox", "MovieBoxProviderIN"
+                    )
+                    val selected = validAPIs.firstOrNull { candidate ->
+                        priorityList.any { candidate.name.equals(it, ignoreCase = true) } || candidate.name.contains("Castle", ignoreCase = true)
+                    } ?: validAPIs.first()
                     loadAndCancel(selected)
                     if (fromUI) DataStoreHelper.currentHomePage = selected.name
                 } else if (PluginManager.loadedOnlinePlugins || PluginManager.isSafeMode()) {

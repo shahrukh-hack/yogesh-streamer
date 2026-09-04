@@ -244,15 +244,80 @@ object PluginManager {
 
     // var allCurrentOutDatedPlugins: Set<OnlinePluginData> = emptySet()
 
+    fun extractAndRegisterBundledPlugins(context: Context): List<PluginData> {
+        val extracted = mutableListOf<PluginData>()
+        safe {
+            val bundledFolder = File(context.filesDir, "bundled_plugins").apply { mkdirs() }
+            val bundledAssets = context.assets.list("plugins") ?: emptyArray()
+            val currentOnline = getPluginsOnline().toMutableList()
+            var changed = false
+
+            for (assetName in bundledAssets) {
+                if (!assetName.endsWith(".cs3")) continue
+                val targetFile = File(bundledFolder, assetName)
+                if (!targetFile.exists() || targetFile.length() == 0L) {
+                    context.assets.open("plugins/$assetName").use { input ->
+                        targetFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                }
+                val internalName = assetName.removeSuffix(".cs3")
+                var data = currentOnline.firstOrNull { it.internalName == internalName }
+                if (data == null) {
+                    data = PluginData(
+                        internalName = internalName,
+                        url = "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/$assetName",
+                        isOnline = true,
+                        filePath = targetFile.absolutePath,
+                        version = 1
+                    )
+                    currentOnline.add(data)
+                    changed = true
+                }
+                extracted.add(data)
+            }
+            if (changed) {
+                setKey(PLUGINS_KEY, currentOnline.toTypedArray())
+            }
+        }
+        return extracted
+    }
+
+    suspend fun loadCastleTvProvider(context: Context): Boolean {
+        return safe {
+            extractAndRegisterBundledPlugins(context)
+            val castleData = getPluginsOnline().firstOrNull { 
+                it.internalName.contains("Castle", ignoreCase = true) 
+            } ?: PluginData(
+                internalName = "CastleTvProvider",
+                url = "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/CastleTvProvider.cs3",
+                isOnline = true,
+                filePath = File(File(context.filesDir, "bundled_plugins"), "CastleTvProvider.cs3").absolutePath,
+                version = 1
+            )
+            val file = File(castleData.filePath)
+            if (file.exists()) {
+                loadPlugin(context, file, castleData)
+            } else false
+        } ?: false
+    }
+
     suspend fun loadSinglePlugin(context: Context, apiName: String): Boolean {
+        if (apiName.contains("Castle", ignoreCase = true)) {
+            val loaded = loadCastleTvProvider(context)
+            if (loaded) return true
+        }
         return (getPluginsOnline().firstOrNull {
-            // Most of the time the provider ends with Provider which isn't part of the api name
-            it.internalName.replace("provider", "", ignoreCase = true) == apiName
+            it.internalName.equals(apiName, ignoreCase = true) ||
+            it.internalName.replace("provider", "", ignoreCase = true).equals(apiName.replace("provider", "", ignoreCase = true), ignoreCase = true) ||
+            (apiName.contains("Castle", ignoreCase = true) && it.internalName.contains("Castle", ignoreCase = true))
         }
             ?: getPluginsLocal().firstOrNull {
-                it.internalName.replace("provider", "", ignoreCase = true) == apiName
+                it.internalName.equals(apiName, ignoreCase = true) ||
+                it.internalName.replace("provider", "", ignoreCase = true).equals(apiName.replace("provider", "", ignoreCase = true), ignoreCase = true) ||
+                (apiName.contains("Castle", ignoreCase = true) && it.internalName.contains("Castle", ignoreCase = true))
             })?.let { savedData ->
-            // OnlinePluginData(savedData, onlineData)
             loadPlugin(
                 context,
                 File(savedData.filePath),

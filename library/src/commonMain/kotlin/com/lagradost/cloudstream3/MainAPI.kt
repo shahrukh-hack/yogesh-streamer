@@ -160,6 +160,8 @@ object APIHolder {
                 apiMap?.get(apiName)?.let { apis.getOrNull(it) }
                 // Leave the ?. null check, it can crash regardless
                 ?: allProviders.firstOrNull { it.name == apiName }
+                ?: apis.firstOrNull { it.name.equals(apiName, ignoreCase = true) || (apiName.contains("Castle", ignoreCase = true) && it.name.contains("Castle", ignoreCase = true)) }
+                ?: allProviders.firstOrNull { it.name.equals(apiName, ignoreCase = true) || (apiName.contains("Castle", ignoreCase = true) && it.name.contains("Castle", ignoreCase = true)) }
             }
         }
     }
