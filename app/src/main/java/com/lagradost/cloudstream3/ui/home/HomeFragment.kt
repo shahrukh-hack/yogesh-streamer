@@ -925,7 +925,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         }
 
         homeViewModel.reloadStored()
-        homeViewModel.loadAndCancel(DataStoreHelper.currentHomePage, false)
+        val currentHome = DataStoreHelper.currentHomePage ?: "Castle TV (Use VLC)"
+        homeViewModel.loadAndCancel(currentHome, true)
         //loadHomePage(false)
 
         // nice profile pic on homepage

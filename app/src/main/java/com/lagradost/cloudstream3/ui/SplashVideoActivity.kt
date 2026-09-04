@@ -103,12 +103,8 @@ class SplashVideoActivity : FragmentActivity() {
             fallbackPlayer = null
         } catch (_: Exception) {}
 
-        val targetIntent = if (accounts.count() > 1) {
-            Intent(this, AccountSelectActivity::class.java)
-        } else {
-            Intent(this, MainActivity::class.java)
-        }.apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        val targetIntent = Intent(this, AccountSelectActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
             data = intent.data
             intent.extras?.let { putExtras(it) }
         }

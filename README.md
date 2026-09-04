@@ -1,6 +1,6 @@
 # Yogesh Streamer
 
-[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v5.3.3.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.3.3/YogeshStreamer-v5.3.3.apk)
+[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v5.3.4.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.3.4/YogeshStreamer-v5.3.4.apk)
 [![Latest Release](https://img.shields.io/github/v/release/shahrukh-hack/yogesh-streamer?style=for-the-badge&color=7C3AED)](https://github.com/shahrukh-hack/yogesh-streamer/releases/latest)
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20Android%20TV%20%7C%20FireStick-22C55E?style=for-the-badge&logo=android)](https://github.com/shahrukh-hack/yogesh-streamer/releases)
 
@@ -12,7 +12,7 @@
 
 Anyone can download the ready-to-install APK directly:
 
-* 🚀 **Latest Release (v5.3.3 APK):** **[Download YogeshStreamer-v5.3.3.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.3.3/YogeshStreamer-v5.3.3.apk)**
+* 🚀 **Latest Release (v5.3.4 APK):** **[Download YogeshStreamer-v5.3.4.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.3.4/YogeshStreamer-v5.3.4.apk)**
 * 📦 **All Releases & Archives:** [View GitHub Releases](https://github.com/shahrukh-hack/yogesh-streamer/releases)
 
 ---

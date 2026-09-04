@@ -587,6 +587,10 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
              * highlight the wrong one in UI.
              */
             when (destination.id) {
+                R.id.navigation_home -> {
+                    navRailView.menu.findItem(R.id.navigation_home)?.isChecked = true
+                    navView.menu.findItem(R.id.navigation_home)?.isChecked = true
+                }
                 R.id.navigation_sports -> {
                     navRailView.menu.findItem(R.id.navigation_sports)?.isChecked = true
                     navView.menu.findItem(R.id.navigation_sports)?.isChecked = true
@@ -600,8 +604,8 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                     R.id.navigation_download_child,
                     R.id.navigation_download_queue
                 ) -> {
-                    navRailView.menu.findItem(R.id.navigation_downloads).isChecked = true
-                    navView.menu.findItem(R.id.navigation_downloads).isChecked = true
+                    navRailView.menu.findItem(R.id.navigation_downloads)?.isChecked = true
+                    navView.menu.findItem(R.id.navigation_downloads)?.isChecked = true
                 }
 
                 in listOf(
@@ -618,8 +622,8 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                     R.id.navigation_settings_plugins,
                     R.id.navigation_test_providers
                 ) -> {
-                    navRailView.menu.findItem(R.id.navigation_settings).isChecked = true
-                    navView.menu.findItem(R.id.navigation_settings).isChecked = true
+                    navRailView.menu.findItem(R.id.navigation_settings)?.isChecked = true
+                    navView.menu.findItem(R.id.navigation_settings)?.isChecked = true
                 }
             }
         }
@@ -1340,12 +1344,14 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
             false
         ) || accounts.count() <= 1
 
+        binding?.navHostFragment?.isInvisible = false
+
         if (isLayout(PHONE) && isAuthEnabled(this) && noAccounts) {
             if (deviceHasPasswordPinLock(this)) {
                 startBiometricAuthentication(this, R.string.biometric_authentication_title, false)
-
-                // hide background while authenticating, Sorry moms & dads 🙇
-                binding?.navHostFragment?.isInvisible = true
+                promptInfo?.let { prompt ->
+                    biometricPrompt?.authenticate(prompt)
+                }
             }
         }
 
@@ -1378,12 +1384,10 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                 val castleLoaded = PluginManager.loadCastleTvProvider(this@MainActivity)
 
                 // Ensure currentHomePage points directly to Castle TV provider so there is no delay or fallback
-                val currentHome = DataStoreHelper.currentHomePage
-                if (currentHome.isNullOrEmpty() || currentHome == "none" || currentHome.contains("Castle", ignoreCase = true)) {
-                    DataStoreHelper.currentHomePage = "Castle TV (Use VLC)"
-                }
+                DataStoreHelper.currentHomePage = "Castle TV (Use VLC)"
 
                 mainPluginsLoadedEvent.invoke(castleLoaded)
+                reloadHomeEvent.invoke(true)
 
                 ioSafe {
                     if (settingsManager.getBoolean(

@@ -256,10 +256,14 @@ object PluginManager {
                 if (!assetName.endsWith(".cs3")) continue
                 val targetFile = File(bundledFolder, assetName)
                 if (!targetFile.exists() || targetFile.length() == 0L) {
-                    context.assets.open("plugins/$assetName").use { input ->
-                        targetFile.outputStream().use { output ->
-                            input.copyTo(output)
+                    try {
+                        context.assets.open("plugins/$assetName").use { input ->
+                            targetFile.outputStream().use { output ->
+                                input.copyTo(output)
+                            }
                         }
+                    } catch (e: Exception) {
+                        logError(e)
                     }
                 }
                 val internalName = assetName.removeSuffix(".cs3")
@@ -270,9 +274,14 @@ object PluginManager {
                         url = "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/$assetName",
                         isOnline = true,
                         filePath = targetFile.absolutePath,
-                        version = 1
+                        version = 38
                     )
                     currentOnline.add(data)
+                    changed = true
+                } else if (data.filePath != targetFile.absolutePath || !File(data.filePath).exists()) {
+                    val updated = data.copy(filePath = targetFile.absolutePath)
+                    currentOnline[currentOnline.indexOf(data)] = updated
+                    data = updated
                     changed = true
                 }
                 extracted.add(data)
@@ -285,25 +294,35 @@ object PluginManager {
     }
 
     suspend fun loadCastleTvProvider(context: Context): Boolean {
-        return try {
+        return safe {
             extractAndRegisterBundledPlugins(context)
+            val bundledFolder = File(context.filesDir, "bundled_plugins").apply { mkdirs() }
+            val targetFile = File(bundledFolder, "CastleTvProvider.cs3")
+            if (!targetFile.exists() || targetFile.length() == 0L) {
+                try {
+                    context.assets.open("plugins/CastleTvProvider.cs3").use { input ->
+                        targetFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                } catch (e: Exception) {
+                    logError(e)
+                }
+            }
             val castleData = getPluginsOnline().firstOrNull { 
                 it.internalName.contains("Castle", ignoreCase = true) 
             } ?: PluginData(
                 internalName = "CastleTvProvider",
                 url = "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/CastleTvProvider.cs3",
                 isOnline = true,
-                filePath = File(File(context.filesDir, "bundled_plugins"), "CastleTvProvider.cs3").absolutePath,
-                version = 1
+                filePath = targetFile.absolutePath,
+                version = 38
             )
-            val file = File(castleData.filePath)
-            if (file.exists()) {
-                loadPlugin(context, file, castleData)
+            val finalData = castleData.copy(filePath = targetFile.absolutePath)
+            if (targetFile.exists() && targetFile.length() > 0L) {
+                loadPlugin(context, targetFile, finalData)
             } else false
-        } catch (t: Throwable) {
-            logError(t)
-            false
-        }
+        } ?: false
     }
 
     suspend fun loadSinglePlugin(context: Context, apiName: String): Boolean {

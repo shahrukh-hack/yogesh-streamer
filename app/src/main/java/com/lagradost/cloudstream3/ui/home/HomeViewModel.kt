@@ -443,15 +443,15 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun afterPluginsLoaded(forceReload: Boolean) {
-        loadAndCancel(DataStoreHelper.currentHomePage, forceReload)
+        loadAndCancel(DataStoreHelper.currentHomePage ?: "Castle TV (Use VLC)", forceReload)
     }
 
     private fun afterMainPluginsLoaded(unused: Boolean = false) {
-        loadAndCancel(DataStoreHelper.currentHomePage, false)
+        loadAndCancel(DataStoreHelper.currentHomePage ?: "Castle TV (Use VLC)", true)
     }
 
     private fun reloadHome(unused: Boolean = false) {
-        loadAndCancel(DataStoreHelper.currentHomePage, true)
+        loadAndCancel(DataStoreHelper.currentHomePage ?: "Castle TV (Use VLC)", true)
     }
 
     private fun reloadAccount(unused: Boolean = false) {
@@ -524,6 +524,10 @@ class HomeViewModel : ViewModel() {
             }
 
             val api = getApiFromNameNull(preferredApiName)
+                ?: getApiFromNameNull("Castle TV (Use VLC)")
+                ?: getApiFromNameNull("CastleTvProvider")
+                ?: apis.firstOrNull { it.name.contains("Castle", ignoreCase = true) }
+                ?: allProviders.firstOrNull { it.name.contains("Castle", ignoreCase = true) }
             if (preferredApiName == noneApi.name && fromUI) {
                 DataStoreHelper.currentHomePage = noneApi.name
                 loadAndCancel(noneApi)
