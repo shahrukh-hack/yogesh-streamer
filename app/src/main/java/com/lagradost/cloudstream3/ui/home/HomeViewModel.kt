@@ -527,7 +527,7 @@ class HomeViewModel : ViewModel() {
                 ?: getApiFromNameNull("Castle TV (Use VLC)")
                 ?: getApiFromNameNull("CastleTvProvider")
                 ?: apis.firstOrNull { it.name.contains("Castle", ignoreCase = true) }
-                ?: allProviders.firstOrNull { it.name.contains("Castle", ignoreCase = true) }
+                ?: APIHolder.allProviders.firstOrNull { it.name.contains("Castle", ignoreCase = true) }
             if (preferredApiName == noneApi.name && fromUI) {
                 DataStoreHelper.currentHomePage = noneApi.name
                 loadAndCancel(noneApi)

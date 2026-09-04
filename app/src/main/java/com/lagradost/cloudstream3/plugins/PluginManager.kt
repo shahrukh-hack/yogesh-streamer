@@ -294,7 +294,7 @@ object PluginManager {
     }
 
     suspend fun loadCastleTvProvider(context: Context): Boolean {
-        return safe {
+        return try {
             extractAndRegisterBundledPlugins(context)
             val bundledFolder = File(context.filesDir, "bundled_plugins").apply { mkdirs() }
             val targetFile = File(bundledFolder, "CastleTvProvider.cs3")
@@ -322,7 +322,10 @@ object PluginManager {
             if (targetFile.exists() && targetFile.length() > 0L) {
                 loadPlugin(context, targetFile, finalData)
             } else false
-        } ?: false
+        } catch (t: Throwable) {
+            logError(t)
+            false
+        }
     }
 
     suspend fun loadSinglePlugin(context: Context, apiName: String): Boolean {
