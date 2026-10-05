@@ -274,7 +274,7 @@ object PluginManager {
                         url = "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/$assetName",
                         isOnline = true,
                         filePath = targetFile.absolutePath,
-                        version = 38
+                        version = 40
                     )
                     currentOnline.add(data)
                     changed = true
@@ -316,7 +316,7 @@ object PluginManager {
                 url = "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/CastleTvProvider.cs3",
                 isOnline = true,
                 filePath = targetFile.absolutePath,
-                version = 38
+                version = 40
             )
             val finalData = castleData.copy(filePath = targetFile.absolutePath)
             if (targetFile.exists() && targetFile.length() > 0L) {
