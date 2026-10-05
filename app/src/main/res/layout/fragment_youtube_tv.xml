@@ -76,6 +76,93 @@
                 app:queryHint="Search YouTube videos, songs, trailers..." />
         </FrameLayout>
 
+        <!-- YouTube TV Category Filter Chips -->
+        <HorizontalScrollView
+            android:id="@+id/youtube_chips_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:scrollbars="none"
+            android:fadingEdge="horizontal"
+            android:requiresFadingEdge="horizontal">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/youtube_chip_group"
+                style="@style/ChipParent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                app:singleLine="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_yt_all"
+                    style="@style/ChipFilled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:focusable="true"
+                    android:text="🔥 All" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_yt_music"
+                    style="@style/ChipFilled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="🎵 Bollywood Hits" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_yt_cricket"
+                    style="@style/ChipFilled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="🏏 Cricket Highlights" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_yt_trailers"
+                    style="@style/ChipFilled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="🎬 Cinema Trailers" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_yt_podcasts"
+                    style="@style/ChipFilled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="🎙️ Podcasts" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_yt_movies"
+                    style="@style/ChipFilled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="🍿 Hindi Movies" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_yt_punjabi"
+                    style="@style/ChipFilled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="🎸 Punjabi Hits" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_yt_comedy"
+                    style="@style/ChipFilled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="📺 Comedy" />
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
         <!-- Loading Indicator -->
         <ProgressBar
             android:id="@+id/youtube_loading"

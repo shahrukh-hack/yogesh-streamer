@@ -31,6 +31,7 @@
     <string name="player_resize_enabled_key">player_resize_enabled_key</string>
     <string name="player_source_priority_key">player_source_priority_key</string>
     <string name="pip_enabled_key">pip_enabled_key</string>
+    <string name="background_audio_play_key">background_audio_play_key</string>
     <string name="double_tap_enabled_key">double_tap_enabled_key</string>
     <string name="double_tap_pause_enabled_key">double_tap_pause_enabled_key</string>
     <string name="double_tap_seek_time_key">double_tap_seek_time_key2</string>

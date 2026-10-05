@@ -622,11 +622,26 @@ class CS3IPlayer : IPlayer {
         //simpleCache = null
     }
 
+    private fun isBackgroundAudioEnabled(): Boolean {
+        return try {
+            val ctx = activity ?: CloudStreamApp.context
+            if (ctx != null) {
+                PreferenceManager.getDefaultSharedPreferences(ctx)
+                    .getBoolean(ctx.getString(R.string.background_audio_play_key), true)
+            } else {
+                true
+            }
+        } catch (e: Exception) {
+            true
+        }
+    }
+
     override fun onStop() {
         Log.i(TAG, "onStop")
 
         saveData()
-        if (!isAudioOnlyBackground) {
+        val shouldBackgroundAudio = isAudioOnlyBackground || isBackgroundAudioEnabled()
+        if (!shouldBackgroundAudio) {
             handleEvent(CSPlayerEvent.Pause, PlayerEventSource.Player)
         }
         //releasePlayer()
@@ -635,7 +650,8 @@ class CS3IPlayer : IPlayer {
     override fun onPause() {
         Log.i(TAG, "onPause")
         saveData()
-        if (!isAudioOnlyBackground) {
+        val shouldBackgroundAudio = isAudioOnlyBackground || isBackgroundAudioEnabled()
+        if (!shouldBackgroundAudio) {
             handleEvent(CSPlayerEvent.Pause, PlayerEventSource.Player)
         }
         //releasePlayer()

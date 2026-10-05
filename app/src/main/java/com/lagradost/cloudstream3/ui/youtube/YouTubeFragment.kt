@@ -77,6 +77,7 @@ class YouTubeFragment : Fragment() {
         binding?.youtubeSearchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrBlank()) {
+                    binding?.youtubeChipGroup?.clearCheck()
                     searchYouTube(query.trim())
                     binding?.youtubeSearchView?.clearFocus()
                 }
@@ -85,13 +86,48 @@ class YouTubeFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
+                    binding?.chipYtAll?.isChecked = true
                     loadYouTubeContent()
                 }
                 return true
             }
         })
 
+        // Category Filter Chips
+        binding?.chipYtAll?.setOnClickListener {
+            binding?.youtubeSearchView?.setQuery("", false)
+            binding?.youtubeSearchView?.clearFocus()
+            loadYouTubeContent()
+        }
+        binding?.chipYtMusic?.setOnClickListener {
+            searchWithChip("Bollywood Hit Songs")
+        }
+        binding?.chipYtCricket?.setOnClickListener {
+            searchWithChip("Cricket Highlights India")
+        }
+        binding?.chipYtTrailers?.setOnClickListener {
+            searchWithChip("Cinema Official Trailer Hindi")
+        }
+        binding?.chipYtPodcasts?.setOnClickListener {
+            searchWithChip("Hindi Podcasts Full Episode")
+        }
+        binding?.chipYtMovies?.setOnClickListener {
+            searchWithChip("Full Hindi Dubbed Movies")
+        }
+        binding?.chipYtPunjabi?.setOnClickListener {
+            searchWithChip("Punjabi Hit Songs")
+        }
+        binding?.chipYtComedy?.setOnClickListener {
+            searchWithChip("Hindi Standup Comedy")
+        }
+
         loadYouTubeContent()
+    }
+
+    private fun searchWithChip(query: String) {
+        binding?.youtubeSearchView?.setQuery(query, false)
+        binding?.youtubeSearchView?.clearFocus()
+        searchYouTube(query)
     }
 
     private fun launchSmartTubeApp() {
@@ -175,6 +211,7 @@ class YouTubeFragment : Fragment() {
 
                 withContext(Dispatchers.Main) {
                     binding?.youtubeLoading?.isVisible = false
+                    binding?.chipYtAll?.isChecked = true
                     if (rows.isEmpty()) {
                         binding?.youtubeEmptyState?.isVisible = true
                     } else {

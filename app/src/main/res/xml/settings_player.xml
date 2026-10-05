@@ -69,6 +69,12 @@
             app:defaultValue="true"
             app:key="@string/pip_enabled_key" />
         <SwitchPreference
+            android:icon="@drawable/ic_baseline_volume_up_24"
+            android:summary="@string/background_audio_play_des"
+            android:title="@string/background_audio_play"
+            app:defaultValue="true"
+            app:key="@string/background_audio_play_key" />
+        <SwitchPreference
             android:icon="@drawable/ic_baseline_aspect_ratio_24"
             android:summary="@string/player_size_settings_des"
             android:title="@string/player_size_settings"

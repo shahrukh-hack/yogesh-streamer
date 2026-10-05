@@ -142,6 +142,8 @@
     <string name="test_log">Log</string>
     <string name="picture_in_picture">Picture-in-picture</string>
     <string name="picture_in_picture_des">Continues playback in a miniature player on top of other apps</string>
+    <string name="background_audio_play">Background Audio Playback</string>
+    <string name="background_audio_play_des">Keep playing audio when switching apps or locking the screen (YouTube Premium style)</string>
     <string name="player_size_settings">Player resize button</string>
     <string name="player_size_settings_des">Remove the black borders</string>
     <string name="player_subtitles_settings">Subtitles</string>
