@@ -1,6 +1,6 @@
 # Yogesh Streamer
 
-[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v5.4.1.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.4.1/YogeshStreamer-v5.4.1.apk)
+[![Download APK](https://img.shields.io/badge/Download-YogeshStreamer--v5.4.2.apk-2563EB?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.4.2/YogeshStreamer-v5.4.2.apk)
 [![Latest Release](https://img.shields.io/github/v/release/shahrukh-hack/yogesh-streamer?style=for-the-badge&color=7C3AED)](https://github.com/shahrukh-hack/yogesh-streamer/releases/latest)
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20Android%20TV%20%7C%20FireStick-22C55E?style=for-the-badge&logo=android)](https://github.com/shahrukh-hack/yogesh-streamer/releases)
 
@@ -12,7 +12,7 @@
 
 Anyone can download the ready-to-install APK directly:
 
-* 🚀 **Latest Release (v5.4.1 APK):** **[Download YogeshStreamer-v5.4.1.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.4.1/YogeshStreamer-v5.4.1.apk)**
+* 🚀 **Latest Release (v5.4.2 APK):** **[Download YogeshStreamer-v5.4.2.apk](https://github.com/shahrukh-hack/yogesh-streamer/releases/download/v5.4.2/YogeshStreamer-v5.4.2.apk)**
 * 📦 **All Releases & Archives:** [View GitHub Releases](https://github.com/shahrukh-hack/yogesh-streamer/releases)
 
 ---
@@ -42,6 +42,11 @@ Anyone can download the ready-to-install APK directly:
 ---
 
 ## 📜 Version Changelog
+
+### 🚀 [v5.4.2] — Bundled Ultra-Fast Live Sports & All-in-One Cinema Engines
+* 🏏 **Pre-bundled JioTV Live Sports**: Directly integrates `JioTV` for seamless live cricket, sports tournaments, and live television streams with zero initial setup.
+* 🎬 **Pre-bundled CineStream All-in-One**: Built-in `CineStream` provider delivering high-speed movies, web series, and anime with instant video link resolution.
+* ⚡ **Synchronized High-Speed Upstream Catalog**: Added verified active extensions (`AllOtt`, `EliteStreams`, `Moviesmod`, `NoirX`, `AnimeWorldIndia`) and purged offline mirrors from official feed.
 
 ### 🚀 [v5.4.1] — Background Audio Playback & Category Filter Chips
 * 🎵 **YouTube Premium-Style Background Audio**: Listen to music, streams, and podcasts with your screen turned off or while using other apps, complete with lock-screen notification media controls.
