@@ -255,7 +255,13 @@ object PluginManager {
             for (assetName in bundledAssets) {
                 if (!assetName.endsWith(".cs3")) continue
                 val targetFile = File(bundledFolder, assetName)
-                if (!targetFile.exists() || targetFile.length() == 0L) {
+                val needsCopy = try {
+                    !targetFile.exists() || targetFile.length() == 0L ||
+                    context.assets.open("plugins/$assetName").use { it.available() } != targetFile.length().toInt()
+                } catch (e: Exception) {
+                    !targetFile.exists() || targetFile.length() == 0L
+                }
+                if (needsCopy) {
                     try {
                         context.assets.open("plugins/$assetName").use { input ->
                             targetFile.outputStream().use { output ->
@@ -266,6 +272,16 @@ object PluginManager {
                         logError(e)
                     }
                 }
+                val assetVersion = try {
+                    java.util.zip.ZipFile(targetFile).use { zip ->
+                        val entry = zip.getEntry("manifest.json")
+                        if (entry != null) {
+                            val jsonText = zip.getInputStream(entry).bufferedReader().readText()
+                            parseJson<BasePlugin.Manifest>(jsonText).version ?: 1
+                        } else 1
+                    }
+                } catch (e: Exception) { 1 }
+
                 val internalName = assetName.removeSuffix(".cs3")
                 var data = currentOnline.firstOrNull { it.internalName == internalName }
                 if (data == null) {
@@ -274,15 +290,23 @@ object PluginManager {
                         url = "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/$assetName",
                         isOnline = true,
                         filePath = targetFile.absolutePath,
-                        version = 40
+                        version = assetVersion
                     )
                     currentOnline.add(data)
                     changed = true
-                } else if (data.filePath != targetFile.absolutePath || !File(data.filePath).exists()) {
-                    val updated = data.copy(filePath = targetFile.absolutePath)
-                    currentOnline[currentOnline.indexOf(data)] = updated
-                    data = updated
-                    changed = true
+                } else {
+                    var updated = data
+                    if (data.filePath != targetFile.absolutePath || !File(data.filePath).exists()) {
+                        updated = updated.copy(filePath = targetFile.absolutePath)
+                    }
+                    if (updated.version < assetVersion) {
+                        updated = updated.copy(version = assetVersion)
+                    }
+                    if (updated != data) {
+                        currentOnline[currentOnline.indexOf(data)] = updated
+                        data = updated
+                        changed = true
+                    }
                 }
                 extracted.add(data)
             }
