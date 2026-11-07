@@ -679,6 +679,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
 
     override fun onPause() {
         super.onPause()
+        StartupSoundPlayer.stopSound()
 
         // Start any delayed updates
         if (ApkInstaller.delayedInstaller?.startInstallation() == true) {
@@ -738,6 +739,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
     }
 
     override fun onDestroy() {
+        StartupSoundPlayer.stopSound()
         filesToDelete.forEach { path ->
             val result = File(path).deleteRecursively()
             if (result) {
@@ -1220,12 +1222,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         settingsForProvider.enableAdult = false // Family Safe Mode (100% block adult content)
         MainAPI.settingsForProvider = settingsForProvider
 
-        // Guaranteed Om Namah Shivaya Sacred Intro Sound
-        safe {
-            val player = android.media.MediaPlayer.create(this, R.raw.om_namah_shivaya)
-            player?.setOnCompletionListener { it.release() }
-            player?.start()
-        }
+        // Sacred Intro Sound is managed safely by StartupSoundPlayer
 
         loadThemes(this)
         enableEdgeToEdgeCompat()

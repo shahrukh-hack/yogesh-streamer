@@ -1,3 +1,4 @@
+import com.lagradost.cloudstream3.utils.StartupSoundPlayer
 @file:Suppress("DEPRECATION")
 
 package com.lagradost.cloudstream3.ui.player
@@ -280,6 +281,7 @@ class CS3IPlayer : IPlayer {
         autoPlay: Boolean?,
         preview: Boolean,
     ) {
+        StartupSoundPlayer.stopSound()
         Log.i(TAG, "loadPlayer")
         if (sameEpisode) {
             saveData()

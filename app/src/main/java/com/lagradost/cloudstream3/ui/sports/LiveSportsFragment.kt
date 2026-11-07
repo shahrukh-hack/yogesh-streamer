@@ -71,8 +71,9 @@ class LiveSportsFragment : Fragment() {
             try {
                 val sportsProviders = allProviders.filter { api ->
                     val name = api.name.lowercase()
-                    name.contains("cric") || name.contains("sktech") || name.contains("sport") ||
-                    name.contains("publicsports") || name.contains("livxow") ||
+                    name.contains("cric") || name.contains("sport") ||
+                    name.contains("jio") || name.contains("daddy") || name.contains("elite") ||
+                    name.contains("publicsports") || name.contains("fancode") || name.contains("iptv") ||
                     api.supportedTypes.contains(TvType.Live)
                 }
 

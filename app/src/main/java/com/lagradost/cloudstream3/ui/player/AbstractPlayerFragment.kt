@@ -1,3 +1,4 @@
+import com.lagradost.cloudstream3.utils.StartupSoundPlayer
 package com.lagradost.cloudstream3.ui.player
 
 import android.os.Bundle
@@ -116,6 +117,7 @@ abstract class AbstractPlayerFragment<T : ViewBinding>(
     override fun fixLayout(view: View) = Unit
 
     override fun onBindingCreated(binding: T, savedInstanceState: Bundle?) {
+        StartupSoundPlayer.stopSound()
         val ctx = context ?: return
         playerHostView = PlayerView(ctx)
         playerHostView?.player = _player

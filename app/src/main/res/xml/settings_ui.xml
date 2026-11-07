@@ -48,6 +48,13 @@
 
         <SwitchPreference
             android:defaultValue="true"
+            android:icon="@drawable/ic_baseline_ondemand_video_24"
+            android:key="play_startup_video_key"
+            android:summary="Play 3D golden cinema studio intro on app startup"
+            android:title="Cinematic Video Intro" />
+
+        <SwitchPreference
+            android:defaultValue="true"
             android:icon="@drawable/ic_baseline_volume_up_24"
             android:key="play_startup_sound_key"
             android:summary="Play sacred Om Namah Shivaya audio on app launch"

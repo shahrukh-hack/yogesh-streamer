@@ -28,6 +28,11 @@ class SplashVideoActivity : FragmentActivity() {
         setContentView(R.layout.activity_splash_video)
 
         val settingsManager = PreferenceManager.getDefaultSharedPreferences(this)
+        val playStartupVideo = settingsManager.getBoolean(StartupSoundPlayer.PLAY_STARTUP_VIDEO_KEY, true)
+        if (!playStartupVideo) {
+            navigateToApp()
+            return
+        }
         val playStartupSound = settingsManager.getBoolean(StartupSoundPlayer.PLAY_STARTUP_SOUND_KEY, true)
 
         videoView = findViewById(R.id.splash_videoview)
@@ -103,6 +108,8 @@ class SplashVideoActivity : FragmentActivity() {
             fallbackPlayer = null
         } catch (_: Exception) {}
 
+        StartupSoundPlayer.stopSound()
+
         val settingsManager = PreferenceManager.getDefaultSharedPreferences(this)
         val skipStartup = settingsManager.getBoolean(
             getString(R.string.skip_startup_account_select_key),
@@ -125,6 +132,7 @@ class SplashVideoActivity : FragmentActivity() {
     }
 
     override fun onDestroy() {
+        StartupSoundPlayer.stopSound()
         try {
             videoView?.stopPlayback()
         } catch (_: Exception) {}
@@ -135,6 +143,8 @@ class SplashVideoActivity : FragmentActivity() {
             }
             fallbackPlayer = null
         } catch (_: Exception) {}
+
+        StartupSoundPlayer.stopSound()
         super.onDestroy()
     }
 }
