@@ -1,5 +1,6 @@
-import com.lagradost.cloudstream3.utils.StartupSoundPlayer
 package com.lagradost.cloudstream3.ui.player
+
+import com.lagradost.cloudstream3.utils.StartupSoundPlayer
 
 import android.os.Bundle
 import android.view.View
