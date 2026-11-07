@@ -47,7 +47,7 @@ class RepoAdapter(
     }
 
     override fun onBindContent(holder: ViewHolderState<Any>, item: RepositoryData, position: Int) {
-        val isPrebuilt = PREBUILT_REPOSITORIES.contains(item)
+        val isPrebuilt = PREBUILT_REPOSITORIES.any { it.url.equals(item.url, ignoreCase = true) }
         val drawable =
             if (isSetup) R.drawable.netflix_download else R.drawable.ic_baseline_delete_outline_24
         when (val binding = holder.view) {

@@ -103,7 +103,7 @@ object RepositoryManager {
             custom
         } else {
             arrayOf(
-                RepositoryData("https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer/master/assets/logos/cinematic_gold_logo_1787579512053.jpg", "Yogesh Streamer Official", "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/repo.json")
+                RepositoryData("https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/logo.jpg", "Yogesh Streamer Official", "https://raw.githubusercontent.com/shahrukh-hack/yogesh-streamer-plugins/builds/repo.json")
             )
         }
     }
