@@ -64,7 +64,19 @@ actual open class YoutubeExtractor actual constructor() : ExtractorApi() {
             )
         }
 
-        val videoStreams = info.videoOnlyStreams.orEmpty()
+        // Prioritize hardware-accelerated H.264 (AVC) streams first, followed by VP9, and lastly AV1
+        // to prevent 100% CPU software decoding spikes and buffering on Android TVs and FireSticks
+        val videoStreams = info.videoOnlyStreams.orEmpty().sortedWith(
+            compareByDescending<org.schabi.newpipe.extractor.stream.VideoStream> {
+                val c = it.codec?.lowercase() ?: ""
+                when {
+                    c.startsWith("avc1") || c.startsWith("h264") -> 3
+                    c.startsWith("vp9") -> 2
+                    c.startsWith("av01") -> 1
+                    else -> 0
+                }
+            }.thenByDescending { it.height }
+        )
         val audioStreams = info.audioStreams.orEmpty()
         videoStreams.forEach { video ->
             callback(

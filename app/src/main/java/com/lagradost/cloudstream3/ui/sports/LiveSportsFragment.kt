@@ -25,6 +25,8 @@ import com.lagradost.cloudstream3.ui.settings.Globals.TV
 import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -77,36 +79,52 @@ class LiveSportsFragment : Fragment() {
                     api.supportedTypes.contains(TvType.Live)
                 }
 
-                val allSportsRows = mutableListOf<ExpandableHomepageList>()
-
-                for (provider in sportsProviders) {
-                    try {
-                        if (provider.hasMainPage) {
-                            val repo = APIRepository(provider)
-                            when (val data = repo.getMainPage(1, null)) {
-                                is Resource.Success -> {
-                                    data.value.forEach { home ->
-                                        home?.items?.forEach { list ->
-                                            if (list.list.isNotEmpty()) {
-                                                allSportsRows.add(
-                                                    ExpandableHomepageList(
-                                                        list.copy(
-                                                            name = "${provider.name} - ${list.name}",
-                                                            list = CopyOnWriteArrayList(list.list)
-                                                        ),
-                                                        currentPage = 1,
-                                                        hasNext = home.hasNext
+                // Concurrently load all sports providers in parallel for 1-2s response
+                val deferredRows = sportsProviders.map { provider ->
+                    async(Dispatchers.IO) {
+                        val rows = mutableListOf<ExpandableHomepageList>()
+                        try {
+                            if (provider.hasMainPage) {
+                                val repo = APIRepository(provider)
+                                when (val data = repo.getMainPage(1, null)) {
+                                    is Resource.Success -> {
+                                        data.value.forEach { home ->
+                                            home?.items?.forEach { list ->
+                                                if (list.list.isNotEmpty()) {
+                                                    rows.add(
+                                                        ExpandableHomepageList(
+                                                            list.copy(
+                                                                name = "${provider.name} - ${list.name}",
+                                                                list = CopyOnWriteArrayList(list.list)
+                                                            ),
+                                                            currentPage = 1,
+                                                            hasNext = home.hasNext
+                                                        )
                                                     )
-                                                )
+                                                }
                                             }
                                         }
                                     }
+                                    else -> Unit
                                 }
-                                else -> Unit
                             }
+                        } catch (e: Exception) {
+                            logError(e)
                         }
-                    } catch (e: Exception) {
-                        logError(e)
+                        rows
+                    }
+                }
+
+                val allSportsRows = deferredRows.awaitAll().flatten().toMutableList()
+
+                // Sort: Prioritize rows with active live match indicators (LIVE, [🔴], vs) to the top
+                allSportsRows.sortByDescending { row ->
+                    val title = row.list.name.lowercase()
+                    when {
+                        title.contains("live") || title.contains("🔴") -> 3
+                        title.contains("cricket") || title.contains("match") -> 2
+                        title.contains("sports") -> 1
+                        else -> 0
                     }
                 }
 

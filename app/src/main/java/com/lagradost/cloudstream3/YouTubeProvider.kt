@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.extractors.YoutubeExtractor
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.mvvm.logError
+import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
 
@@ -20,6 +21,9 @@ class YouTubeProvider : MainAPI() {
         "UCFFbwnve3yF62-tVXkTyHqg" to "Hit Songs & Soundtracks (Zee Music)",
         "UC3gNmTGu-TTbFPpfSs5kNkg" to "Blockbuster Cinema Trailers",
         "UCAuUUnT6oDeKwE6v1NGQxug" to "Cricket Highlights & Moments (ICC)",
+        "UCt4t-jeY85JegMlZ-E5UWtA" to "24/7 Live News & Headlines (Aaj Tak)",
+        "UCaayLD9i5x4MmIoVZxXSv_g" to "Devotional Bhakti Sagar (T-Series)",
+        "UCw7rn4n2i_QYvIuHek_N0_A" to "Standup Comedy & Specials",
         "UCX6OQ3DkcsbYNE6H8uQQuVA" to "Global Trending Entertainment",
         "UCbTLwN10NoCU4WDzLf1JMOA" to "YRF Bollywood Specials"
     )
@@ -95,13 +99,28 @@ class YouTubeProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse {
         val videoId = url.substringAfter("watch?v=").substringBefore("&").substringAfter("youtu.be/").substringBefore("?")
+        var videoTitle = "YouTube Video"
+        var authorName: String? = null
+        var thumbUrl = "https://i.ytimg.com/vi/$videoId/hqdefault.jpg"
+
+        try {
+            val oembedUrl = "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=$videoId&format=json"
+            val oembedText = app.get(oembedUrl, timeout = 6).text
+            val oembedJson = parseJson<Map<String, Any?>>(oembedText)
+            videoTitle = oembedJson["title"]?.toString() ?: videoTitle
+            authorName = oembedJson["author_name"]?.toString()
+            thumbUrl = oembedJson["thumbnail_url"]?.toString() ?: thumbUrl
+        } catch (_: Exception) {
+        }
+
         return newMovieLoadResponse(
-            name = "YouTube Video",
+            name = videoTitle,
             url = url,
             type = TvType.Movie,
             dataUrl = url
         ) {
-            this.posterUrl = "https://i.ytimg.com/vi/$videoId/hqdefault.jpg"
+            this.posterUrl = thumbUrl
+            this.plot = authorName?.let { "Channel: $it" }
         }
     }
 
