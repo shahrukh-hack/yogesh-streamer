@@ -13,7 +13,6 @@
         android:id="@+id/home_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/navbar_width"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -24,11 +23,49 @@
             android:layout_height="0dp"
             android:visibility="gone" />
 
-        <com.facebook.shimmer.ShimmerFrameLayout
+                <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/home_loading_shimmer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="60dp"
+            android:orientation="vertical"
+            app:shimmer_auto_start="true"
+            app:shimmer_base_alpha="0.2"
+            app:shimmer_duration="@integer/loading_time"
+            app:shimmer_highlight_alpha="0.3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:alpha="0.25"
+                    app:cardBackgroundColor="@color/grayShimmer"
+                    app:cardCornerRadius="@dimen/rounded_image_radius" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/result_padding"
+                    android:layout_marginTop="@dimen/result_padding"
+                    android:layout_marginEnd="@dimen/result_padding"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/loading_list" />
+
+                    <include layout="@layout/loading_list" />
+
+                    <include layout="@layout/loading_list" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
         <LinearLayout
             android:id="@+id/home_api_holder"
             android:layout_width="0dp"

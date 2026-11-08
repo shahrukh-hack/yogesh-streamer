@@ -36,6 +36,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 class YouTubeFragment : Fragment() {
     companion object {
         private const val YOUTUBE_LAST_SEARCH_KEY = "youtube_last_search_query"
+        private val cachedYouTubeRows = CopyOnWriteArrayList<ExpandableHomepageList>()
+        private var lastFetchTimestamp: Long = 0L
+        private const val CACHE_EXPIRY_MS = 10 * 60 * 1000L // 10 minutes
     }
 
     private var binding: FragmentYoutubeBinding? = null
@@ -64,10 +67,23 @@ class YouTubeFragment : Fragment() {
             expandCallback = null
         )
 
-        binding?.youtubeMasterRecycler?.adapter = tubeAdapter
+        binding?.youtubeMasterRecycler?.apply {
+            adapter = tubeAdapter
+            setHasFixedSize(true)
+            itemAnimator = null
+        }
 
         binding?.youtubeRefreshBtt?.setOnClickListener {
-            loadYouTubeContent()
+            if (cachedYouTubeRows.isNotEmpty()) {
+            tubeAdapter?.submitList(ArrayList(cachedYouTubeRows))
+            binding?.youtubeLoading?.isVisible = false
+            binding?.youtubeEmptyState?.isVisible = false
+            if (System.currentTimeMillis() - lastFetchTimestamp > CACHE_EXPIRY_MS) {
+                loadYouTubeContent(forceRefresh = false)
+            }
+        } else {
+            loadYouTubeContent(forceRefresh = true)
+        }
         }
 
         binding?.smarttubeAppLaunchBtt?.setOnClickListener {
@@ -151,9 +167,11 @@ class YouTubeFragment : Fragment() {
         startActivity(browserIntent)
     }
 
-    private fun loadYouTubeContent() {
-        binding?.youtubeLoading?.isVisible = true
-        binding?.youtubeEmptyState?.isVisible = false
+    private fun loadYouTubeContent(forceRefresh: Boolean = false) {
+        if (forceRefresh || cachedYouTubeRows.isEmpty()) {
+            binding?.youtubeLoading?.isVisible = true
+            binding?.youtubeEmptyState?.isVisible = false
+        }
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -256,13 +274,19 @@ class YouTubeFragment : Fragment() {
                     )
                 } else emptyList()
 
+                if (rows.isNotEmpty()) {
+                    cachedYouTubeRows.clear()
+                    cachedYouTubeRows.addAll(rows)
+                    lastFetchTimestamp = System.currentTimeMillis()
+                }
+
                 withContext(Dispatchers.Main) {
                     binding?.youtubeLoading?.isVisible = false
-                    if (rows.isEmpty()) {
+                    if (rows.isEmpty() && cachedYouTubeRows.isEmpty()) {
                         binding?.youtubeEmptyState?.isVisible = true
                     } else {
                         binding?.youtubeEmptyState?.isVisible = false
-                        tubeAdapter?.submitList(rows)
+                        tubeAdapter?.submitList(ArrayList(if (rows.isNotEmpty()) rows else cachedYouTubeRows))
                     }
                 }
             } catch (e: Exception) {

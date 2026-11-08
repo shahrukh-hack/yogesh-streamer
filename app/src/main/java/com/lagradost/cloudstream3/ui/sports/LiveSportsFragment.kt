@@ -24,15 +24,23 @@ import com.lagradost.cloudstream3.ui.search.SearchHelper
 import com.lagradost.cloudstream3.ui.settings.Globals.TV
 import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.CopyOnWriteArrayList
 
 class LiveSportsFragment : Fragment() {
+    companion object {
+        // High-performance In-Memory Stale-While-Revalidate (SWR) Cache
+        private val cachedSportsRows = CopyOnWriteArrayList<ExpandableHomepageList>()
+        private var lastFetchTimestamp: Long = 0L
+        private const val CACHE_EXPIRY_MS = 5 * 60 * 1000L // 5 minutes freshness
+    }
+
     private var binding: FragmentLiveSportsBinding? = null
     private var sportsAdapter: ParentItemAdapter? = null
+    private var fetchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,19 +65,52 @@ class LiveSportsFragment : Fragment() {
             expandCallback = null
         )
 
-        binding?.sportsMasterRecycler?.adapter = sportsAdapter
+        binding?.sportsMasterRecycler?.apply {
+            adapter = sportsAdapter
+            setHasFixedSize(true)
+            itemAnimator = null // Remove blink/flicker on progressive row appends
+        }
 
         binding?.sportsRefreshBtt?.setOnClickListener {
-            loadSportsContent()
+            loadSportsContent(forceRefresh = true)
         }
-        loadSportsContent()
+
+        // Instant 0ms Render from SWR Cache if available
+        if (cachedSportsRows.isNotEmpty()) {
+            sportsAdapter?.submitList(ArrayList(cachedSportsRows))
+            binding?.sportsLoading?.isVisible = false
+            binding?.sportsEmptyState?.isVisible = false
+
+            // Background revalidation if stale
+            if (System.currentTimeMillis() - lastFetchTimestamp > CACHE_EXPIRY_MS) {
+                loadSportsContent(forceRefresh = false)
+            }
+        } else {
+            loadSportsContent(forceRefresh = true)
+        }
     }
 
-    private fun loadSportsContent() {
-        binding?.sportsLoading?.isVisible = true
-        binding?.sportsEmptyState?.isVisible = false
+    private fun sortSportsRows(rows: List<ExpandableHomepageList>): List<ExpandableHomepageList> {
+        return rows.sortedByDescending { row ->
+            val title = row.list.name.lowercase()
+            when {
+                title.contains("live") || title.contains("🔴") -> 3
+                title.contains("cricket") || title.contains("match") -> 2
+                title.contains("sports") -> 1
+                else -> 0
+            }
+        }
+    }
 
-        lifecycleScope.launch(Dispatchers.IO) {
+    private fun loadSportsContent(forceRefresh: Boolean = false) {
+        fetchJob?.cancel()
+
+        if (forceRefresh || cachedSportsRows.isEmpty()) {
+            binding?.sportsLoading?.isVisible = true
+            binding?.sportsEmptyState?.isVisible = false
+        }
+
+        fetchJob = lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val sportsProviders = allProviders.filter { api ->
                     val name = api.name.lowercase()
@@ -79,75 +120,106 @@ class LiveSportsFragment : Fragment() {
                     api.supportedTypes.contains(TvType.Live)
                 }
 
-                // Concurrently load all sports providers in parallel for 1-2s response
-                val deferredRows = sportsProviders.map { provider ->
-                    async(Dispatchers.IO) {
-                        val rows = mutableListOf<ExpandableHomepageList>()
+                if (sportsProviders.isEmpty()) {
+                    withContext(Dispatchers.Main) {
+                        binding?.sportsLoading?.isVisible = false
+                        if (cachedSportsRows.isEmpty()) {
+                            binding?.sportsEmptyState?.isVisible = true
+                        }
+                    }
+                    return@launch
+                }
+
+                val accumulatedRows = CopyOnWriteArrayList<ExpandableHomepageList>()
+                if (!forceRefresh && cachedSportsRows.isNotEmpty()) {
+                    accumulatedRows.addAll(cachedSportsRows)
+                }
+
+                // Progressive Parallel Execution: Each provider updates the UI immediately upon completion
+                val jobs = sportsProviders.map { provider ->
+                    launch(Dispatchers.IO) {
                         try {
-                            if (provider.hasMainPage) {
+                            if (!provider.hasMainPage) return@launch
+
+                            // 3.5s strict per-provider timeout guard: slow/hung servers will NEVER block the UI
+                            withTimeoutOrNull(3500L) {
                                 val repo = APIRepository(provider)
-                                when (val data = repo.getMainPage(1, null)) {
-                                    is Resource.Success -> {
-                                        data.value.forEach { home ->
-                                            home?.items?.forEach { list ->
-                                                if (list.list.isNotEmpty()) {
-                                                    rows.add(
-                                                        ExpandableHomepageList(
-                                                            list.copy(
-                                                                name = "${provider.name} - ${list.name}",
-                                                                list = CopyOnWriteArrayList(list.list)
-                                                            ),
-                                                            currentPage = 1,
-                                                            hasNext = home.hasNext
-                                                        )
+                                val data = repo.getMainPage(1, null)
+                                if (data is Resource.Success) {
+                                    val newRows = mutableListOf<ExpandableHomepageList>()
+                                    data.value.forEach { home ->
+                                        home?.items?.forEach { list ->
+                                            if (list.list.isNotEmpty()) {
+                                                newRows.add(
+                                                    ExpandableHomepageList(
+                                                        list.copy(
+                                                            name = "${provider.name} - ${list.name}",
+                                                            list = CopyOnWriteArrayList(list.list)
+                                                        ),
+                                                        currentPage = 1,
+                                                        hasNext = home.hasNext
                                                     )
-                                                }
+                                                )
                                             }
                                         }
                                     }
-                                    else -> Unit
+
+                                    if (newRows.isNotEmpty()) {
+                                        // Filter out any older rows from this exact provider before appending fresh ones
+                                        val filtered = accumulatedRows.filterNot { it.list.name.startsWith(provider.name) }
+                                        accumulatedRows.clear()
+                                        accumulatedRows.addAll(filtered)
+                                        accumulatedRows.addAll(newRows)
+
+                                        val sortedSnapshot = sortSportsRows(ArrayList(accumulatedRows))
+
+                                        // Progressive instant dispatch to UI
+                                        withContext(Dispatchers.Main) {
+                                            binding?.sportsLoading?.isVisible = false
+                                            binding?.sportsEmptyState?.isVisible = false
+                                            sportsAdapter?.submitList(sortedSnapshot)
+                                        }
+                                    }
                                 }
                             }
                         } catch (e: Exception) {
                             logError(e)
                         }
-                        rows
                     }
                 }
 
-                val allSportsRows = deferredRows.awaitAll().flatten().toMutableList()
+                // Wait for all progressive jobs to conclude
+                jobs.forEach { it.join() }
 
-                // Sort: Prioritize rows with active live match indicators (LIVE, [🔴], vs) to the top
-                allSportsRows.sortByDescending { row ->
-                    val title = row.list.name.lowercase()
-                    when {
-                        title.contains("live") || title.contains("🔴") -> 3
-                        title.contains("cricket") || title.contains("match") -> 2
-                        title.contains("sports") -> 1
-                        else -> 0
-                    }
-                }
+                // Save final state into high-speed memory cache
+                val finalSorted = sortSportsRows(ArrayList(accumulatedRows))
+                cachedSportsRows.clear()
+                cachedSportsRows.addAll(finalSorted)
+                lastFetchTimestamp = System.currentTimeMillis()
 
                 withContext(Dispatchers.Main) {
                     binding?.sportsLoading?.isVisible = false
-                    if (allSportsRows.isEmpty()) {
+                    if (finalSorted.isEmpty()) {
                         binding?.sportsEmptyState?.isVisible = true
                     } else {
                         binding?.sportsEmptyState?.isVisible = false
-                        sportsAdapter?.submitList(allSportsRows)
+                        sportsAdapter?.submitList(finalSorted)
                     }
                 }
             } catch (e: Exception) {
                 logError(e)
                 withContext(Dispatchers.Main) {
                     binding?.sportsLoading?.isVisible = false
-                    binding?.sportsEmptyState?.isVisible = true
+                    if (cachedSportsRows.isEmpty()) {
+                        binding?.sportsEmptyState?.isVisible = true
+                    }
                 }
             }
         }
     }
 
     override fun onDestroyView() {
+        fetchJob?.cancel()
         binding = null
         sportsAdapter = null
         super.onDestroyView()
