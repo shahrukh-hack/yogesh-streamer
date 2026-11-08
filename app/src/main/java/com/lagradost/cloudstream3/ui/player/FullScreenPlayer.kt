@@ -1,5 +1,8 @@
 package com.lagradost.cloudstream3.ui.player
 
+import com.lagradost.cloudstream3.CloudStreamApp.Companion.getKey
+import com.lagradost.cloudstream3.CloudStreamApp.Companion.setKey
+
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -966,12 +969,7 @@ open class FullScreenPlayer : AbstractPlayerFragment<FragmentPlayerBinding>(
 
     protected fun restoreCompressorSettings() {
         val c = (player as? CS3IPlayer)?.compressor ?: return
-        c.enabled     = getKey(COMPRESSOR_ENABLED_KEY)   ?: false
-        c.threshold   = getKey(COMPRESSOR_THRESHOLD_KEY) ?: -24f
-        c.ratio       = getKey(COMPRESSOR_RATIO_KEY)     ?: 8f
-        c.attackMs    = getKey(COMPRESSOR_ATTACK_KEY)    ?: 5f
-        c.releaseMs   = getKey(COMPRESSOR_RELEASE_KEY)   ?: 400f
-        c.makeupGain  = getKey(COMPRESSOR_MAKEUP_KEY)    ?: 12f
+        c.restoreSavedSettings()
     }
 
     private fun onClickChange() {
