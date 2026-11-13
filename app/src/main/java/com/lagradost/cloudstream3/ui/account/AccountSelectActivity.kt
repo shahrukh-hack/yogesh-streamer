@@ -1,5 +1,7 @@
 package com.lagradost.cloudstream3.ui.account
 
+import com.lagradost.cloudstream3.utils.AppLockHelper
+import com.lagradost.cloudstream3.ui.SplashVideoActivity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -48,6 +50,15 @@ class AccountSelectActivity : FragmentActivity(), BiometricCallback {
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!AppLockHelper.isAppUnlocked(this)) {
+            val lockIntent = Intent(this, SplashVideoActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("SHOW_LOCK_DIRECTLY", true)
+            }
+            startActivity(lockIntent)
+            finish()
+            return
+        }
 
         // Are we editing and coming from MainActivity?
         val isEditingFromMainActivity = intent.getBooleanExtra(

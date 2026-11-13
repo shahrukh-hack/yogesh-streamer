@@ -45,6 +45,19 @@
         app:key="@string/pref_category_security_key">
 
         <SwitchPreference
+            android:key="app_master_passcode_always_require"
+            android:defaultValue="false"
+            android:icon="@drawable/video_locked"
+            android:title="Always Require Passcode"
+            android:summary="Require 178757 master passcode every time app opens" />
+
+        <Preference
+            android:key="app_master_passcode_relock"
+            android:icon="@drawable/video_locked"
+            android:title="Lock App Now"
+            android:summary="Relock the app with master passcode immediately" />
+
+        <SwitchPreference
             android:key="@string/biometric_key"
             android:defaultValue="false"
             android:summary="@string/biometric_setting_summary"

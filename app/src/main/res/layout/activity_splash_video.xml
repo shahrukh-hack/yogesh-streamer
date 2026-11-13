@@ -38,4 +38,10 @@
         android:textColor="#CCFFFFFF"
         android:textSize="12sp"
         android:visibility="gone" />
+
+    <!-- Security Gateway Lock Layout (appears after intro video/music) -->
+    <include
+        android:id="@+id/splash_lock_container"
+        layout="@layout/layout_app_lock"
+        android:visibility="gone" />
 </FrameLayout>

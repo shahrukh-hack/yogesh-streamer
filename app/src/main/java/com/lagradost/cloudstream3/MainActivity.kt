@@ -126,6 +126,7 @@ import com.lagradost.cloudstream3.ui.settings.SettingsGeneral
 import com.lagradost.cloudstream3.ui.setup.HAS_DONE_SETUP_KEY
 import com.lagradost.cloudstream3.ui.setup.SetupFragmentExtensions
 import com.lagradost.cloudstream3.utils.ApkInstaller
+import com.lagradost.cloudstream3.utils.AppLockHelper
 import com.lagradost.cloudstream3.utils.AppContextUtils.getApiDubstatusSettings
 import com.lagradost.cloudstream3.utils.AppContextUtils.html
 import com.lagradost.cloudstream3.utils.AppContextUtils.isCastApiAvailable
@@ -666,6 +667,15 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
 
     override fun onResume() {
         super.onResume()
+        if (!AppLockHelper.isAppUnlocked(this)) {
+            val lockIntent = Intent(this, com.lagradost.cloudstream3.ui.SplashVideoActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("SHOW_LOCK_DIRECTLY", true)
+            }
+            startActivity(lockIntent)
+            finish()
+            return
+        }
         afterPluginsLoadedEvent += ::onAllPluginsLoaded
         setActivityInstance(this)
         try {
@@ -1210,6 +1220,15 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (!AppLockHelper.isAppUnlocked(this)) {
+            val lockIntent = Intent(this, com.lagradost.cloudstream3.ui.SplashVideoActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("SHOW_LOCK_DIRECTLY", true)
+            }
+            startActivity(lockIntent)
+            finish()
+            return
+        }
         app.initClient(this, ignoreSSL = false)
         @OptIn(UnsafeSSL::class)
         insecureApp.initClient(this, ignoreSSL = true)

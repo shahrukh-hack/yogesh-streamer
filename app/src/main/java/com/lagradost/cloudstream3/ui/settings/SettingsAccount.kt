@@ -52,6 +52,10 @@ import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setTool
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setUpToolbar
 import com.lagradost.cloudstream3.utils.AppContextUtils.html
 import com.lagradost.cloudstream3.utils.BackupUtils
+import com.lagradost.cloudstream3.utils.AppLockHelper
+import com.lagradost.cloudstream3.ui.SplashVideoActivity
+import android.content.Intent
+import androidx.preference.Preference
 import com.lagradost.cloudstream3.utils.BiometricAuthenticator.BiometricCallback
 import com.lagradost.cloudstream3.utils.BiometricAuthenticator.authCallback
 import com.lagradost.cloudstream3.utils.BiometricAuthenticator.biometricPrompt
@@ -447,7 +451,18 @@ class SettingsAccount : BasePreferenceFragmentCompat(), BiometricCallback {
         setPreferencesFromResource(R.xml.settings_account, rootKey)
 
         //Hides the security  category on TV as it's only Biometric for now
-        getPref(R.string.pref_category_security_key)?.hideOn(TV or EMULATOR)
+        // Security category enabled on all devices (TV & Mobile)
+        getPref<Preference>("app_master_passcode_relock")?.setOnPreferenceClickListener {
+            val ctx = context ?: return@setOnPreferenceClickListener false
+            AppLockHelper.relockApp(ctx)
+            val intent = Intent(ctx, SplashVideoActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("SHOW_LOCK_DIRECTLY", true)
+            }
+            startActivity(intent)
+            activity?.finish()
+            true
+        }
 
         getPref(R.string.biometric_key)?.hideOn(TV or EMULATOR)?.setOnPreferenceClickListener {
             val ctx = context ?: return@setOnPreferenceClickListener false
