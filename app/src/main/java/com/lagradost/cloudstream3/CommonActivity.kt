@@ -173,7 +173,9 @@ object CommonActivity {
         val spamWords = listOf(
             "telegram", "t.me", "cncv", "cncverse", "subscribe", "join us",
             "join channel", "ads mode", "ad mode", "you are in ads", "you are on ad",
-            "free mode", "ad version", "ad-version", "ads version", "phisher", "sushan"
+            "free mode", "ad version", "ad-version", "ads version", "phisher", "sushan",
+            "donate", "buymeacoffee", "buy me a coffee", "goal", "support us",
+            "supportbot", "kofi", "ko-fi", "paypal", "upi", "patreon", "contribute"
         )
         if (spamWords.any { lower.contains(it) }) {
             Log.i(TAG, "Suppressed promotional plugin toast: $message")
