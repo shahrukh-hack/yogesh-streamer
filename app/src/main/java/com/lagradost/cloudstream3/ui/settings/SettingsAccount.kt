@@ -452,7 +452,7 @@ class SettingsAccount : BasePreferenceFragmentCompat(), BiometricCallback {
 
         //Hides the security  category on TV as it's only Biometric for now
         // Security category enabled on all devices (TV & Mobile)
-        getPref<Preference>("app_master_passcode_relock")?.setOnPreferenceClickListener {
+        findPreference<Preference>("app_master_passcode_relock")?.setOnPreferenceClickListener {
             val ctx = context ?: return@setOnPreferenceClickListener false
             AppLockHelper.relockApp(ctx)
             val intent = Intent(ctx, SplashVideoActivity::class.java).apply {
