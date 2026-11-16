@@ -20,6 +20,7 @@ import com.lagradost.cloudstream3.ui.APIRepository
 import com.lagradost.cloudstream3.ui.home.HomeViewModel.ExpandableHomepageList
 import com.lagradost.cloudstream3.ui.home.ParentItemAdapter
 import com.lagradost.cloudstream3.ui.result.START_ACTION_RESUME_LATEST
+import com.lagradost.cloudstream3.ui.search.SEARCH_ACTION_LOAD
 import com.lagradost.cloudstream3.ui.search.SearchClickCallback
 import com.lagradost.cloudstream3.ui.search.SearchHelper
 import com.lagradost.cloudstream3.ui.settings.Globals.TV
@@ -61,7 +62,9 @@ class LiveSportsFragment : Fragment() {
         sportsAdapter = ParentItemAdapter(
             id = 0,
             clickCallback = { callback: SearchClickCallback ->
-                AppContextUtils.loadSearchResult(callback.card, START_ACTION_RESUME_LATEST)
+                if (callback.action == SEARCH_ACTION_LOAD) {
+                    AppContextUtils.loadSearchResult(callback.card, START_ACTION_RESUME_LATEST)
+                }
             },
             moreInfoClickCallback = { _ -> },
             expandCallback = null

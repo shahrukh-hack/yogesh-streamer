@@ -255,22 +255,14 @@ object PluginManager {
             for (assetName in bundledAssets) {
                 if (!assetName.endsWith(".cs3")) continue
                 val targetFile = File(bundledFolder, assetName)
-                val needsCopy = try {
-                    !targetFile.exists() || targetFile.length() == 0L ||
-                    context.assets.open("plugins/$assetName").use { it.available() } != targetFile.length().toInt()
-                } catch (e: Exception) {
-                    !targetFile.exists() || targetFile.length() == 0L
-                }
-                if (needsCopy) {
-                    try {
-                        context.assets.open("plugins/$assetName").use { input ->
-                            targetFile.outputStream().use { output ->
-                                input.copyTo(output)
-                            }
+                try {
+                    context.assets.open("plugins/$assetName").use { input ->
+                        targetFile.outputStream().use { output ->
+                            input.copyTo(output)
                         }
-                    } catch (e: Exception) {
-                        logError(e)
                     }
+                } catch (e: Exception) {
+                    logError(e)
                 }
                 val assetVersion = try {
                     java.util.zip.ZipFile(targetFile).use { zip ->
@@ -295,13 +287,10 @@ object PluginManager {
                     currentOnline.add(data)
                     changed = true
                 } else {
-                    var updated = data
-                    if (data.filePath != targetFile.absolutePath || !File(data.filePath).exists()) {
-                        updated = updated.copy(filePath = targetFile.absolutePath)
-                    }
-                    if (updated.version < assetVersion) {
-                        updated = updated.copy(version = assetVersion)
-                    }
+                    val updated = data.copy(
+                        filePath = targetFile.absolutePath,
+                        version = maxOf(data.version, assetVersion)
+                    )
                     if (updated != data) {
                         currentOnline[currentOnline.indexOf(data)] = updated
                         data = updated
