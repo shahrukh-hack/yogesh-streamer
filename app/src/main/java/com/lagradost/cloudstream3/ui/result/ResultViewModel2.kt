@@ -2514,6 +2514,7 @@ class ResultViewModel2 : ViewModel() {
             when (autostart.startAction) {
                 START_ACTION_RESUME_LATEST -> {
                     currentEpisodes[currentIndex]?.let { currentRange ->
+                        var played = false
                         for (ep in currentRange) {
                             if (ep.getWatchProgress() > 0.9) continue
                             handleAction(
@@ -2522,7 +2523,16 @@ class ResultViewModel2 : ViewModel() {
                                     ep
                                 )
                             )
+                            played = true
                             break
+                        }
+                        if (!played && currentRange.isNotEmpty()) {
+                            handleAction(
+                                EpisodeClickEvent(
+                                    getPlayerAction(activity),
+                                    currentRange.first()
+                                )
+                            )
                         }
                     }
                 }

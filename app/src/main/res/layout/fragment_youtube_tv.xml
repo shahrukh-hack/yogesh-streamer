@@ -45,7 +45,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:text="Launch SmartTube"
-                android:focusable="true" />
+                android:focusable="true"
+                android:nextFocusDown="@id/youtube_search_view"
+                android:nextFocusRight="@id/youtube_refresh_btt" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/youtube_refresh_btt"
@@ -54,6 +56,8 @@
                 android:layout_height="wrap_content"
                 android:text="Refresh"
                 android:focusable="true"
+                android:nextFocusDown="@id/youtube_search_view"
+                android:nextFocusLeft="@id/smarttube_app_launch_btt"
                 app:icon="@drawable/ic_refresh" />
         </LinearLayout>
 
@@ -72,6 +76,9 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:focusable="true"
+                android:nextFocusDown="@id/youtube_chips_scroll"
+                android:nextFocusUp="@id/youtube_refresh_btt"
+                android:nextFocusLeft="@id/nav_rail_view"
                 app:iconifiedByDefault="false"
                 app:queryHint="Search YouTube videos, songs, trailers..." />
         </FrameLayout>
@@ -84,7 +91,10 @@
             android:layout_marginBottom="14dp"
             android:scrollbars="none"
             android:fadingEdge="horizontal"
-            android:requiresFadingEdge="horizontal">
+            android:requiresFadingEdge="horizontal"
+            android:nextFocusDown="@id/youtube_master_recycler"
+            android:nextFocusUp="@id/youtube_search_view"
+            android:nextFocusLeft="@id/nav_rail_view">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/youtube_chip_group"
@@ -212,6 +222,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:descendantFocusability="afterDescendants"
+            android:nextFocusLeft="@id/nav_rail_view"
+            android:nextFocusUp="@id/youtube_chips_scroll"
             android:paddingBottom="40dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/homepage_parent" />

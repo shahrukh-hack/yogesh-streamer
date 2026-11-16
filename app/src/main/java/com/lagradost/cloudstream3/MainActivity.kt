@@ -37,7 +37,9 @@ import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.view.marginStart
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -1248,6 +1250,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         setNavigationBarColorCompat(R.attr.primaryGrayBackground)
         updateLocale()
         super.onCreate(savedInstanceState)
+        setupDonationBlockerShield()
         try {
             if (isCastApiAvailable()) {
                 CastContext.getSharedInstance(this) { it.run() }
@@ -2084,6 +2087,91 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
 
     override fun onAuthenticationError() {
         binding?.navHostFragment?.isInvisible = false
+    }
+
+    private fun setupDonationBlockerShield() {
+        // 1. Pre-seed donation preferences so plugins believe popups were just shown or should never trigger
+        safe {
+            getSharedPreferences("phisher_donation_prefs", Context.MODE_PRIVATE).edit()
+                .putLong("phisher_donation_last_shown_v2", Long.MAX_VALUE)
+                .putLong("phisher_donation_cached_amount_v3", 999999L)
+                .apply()
+            getSharedPreferences("jiotv_prefs", Context.MODE_PRIVATE).edit()
+                .putLong("allforu_last_shown", Long.MAX_VALUE)
+                .apply()
+        }
+
+        // 2. Fragment Lifecycle Interceptor: Instantly dismisses any DialogFragment or Fragment related to donation/announcer
+        supportFragmentManager.registerFragmentLifecycleCallbacks(
+            object : FragmentManager.FragmentLifecycleCallbacks() {
+                private fun filterAndDismiss(f: androidx.fragment.app.Fragment) {
+                    val className = f.javaClass.name.lowercase()
+                    val tag = f.tag?.lowercase() ?: ""
+                    if (className.contains("donation") || className.contains("announcer") ||
+                        className.contains("phisher") || className.contains("allforu") ||
+                        tag.contains("donation") || tag.contains("announcer") ||
+                        tag.contains("dialog_tag") || tag.contains("phisher") || tag.contains("allforu")
+                    ) {
+                        Log.i("MainActivity", "Blocked and dismissed donation fragment: $className with tag $tag")
+                        try {
+                            if (f is DialogFragment) {
+                                f.dismissAllowingStateLoss()
+                            } else {
+                                f.parentFragmentManager.beginTransaction().remove(f).commitAllowingStateLoss()
+                            }
+                        } catch (e: Throwable) {
+                            logError(e)
+                        }
+                    }
+                }
+
+                override fun onFragmentAttached(fm: FragmentManager, f: androidx.fragment.app.Fragment, context: Context) {
+                    filterAndDismiss(f)
+                }
+
+                override fun onFragmentCreated(fm: FragmentManager, f: androidx.fragment.app.Fragment, savedInstanceState: Bundle?) {
+                    filterAndDismiss(f)
+                }
+
+                override fun onFragmentStarted(fm: FragmentManager, f: androidx.fragment.app.Fragment) {
+                    filterAndDismiss(f)
+                }
+
+                override fun onFragmentResumed(fm: FragmentManager, f: androidx.fragment.app.Fragment) {
+                    filterAndDismiss(f)
+                }
+            },
+            true
+        )
+
+        // 3. Global DecorView Interceptor: In case an AlertDialog or raw View tree contains donation keywords, hide or dismiss it
+        safe {
+            window.decorView.viewTreeObserver.addOnGlobalLayoutListener {
+                dismissDonationViews(window.decorView)
+            }
+        }
+    }
+
+    private fun dismissDonationViews(root: View?) {
+        if (root == null) return
+        if (root is ViewGroup) {
+            for (i in 0 until root.childCount) {
+                val child = root.getChildAt(i)
+                if (child is android.widget.TextView) {
+                    val text = child.text?.toString()?.lowercase() ?: ""
+                    if (text.contains("support phisher") || text.contains("support allforu") ||
+                        text.contains("keep 80+ free extensions alive") || text.contains("monthly support goal") ||
+                        text.contains("keep it alive") || text.contains("can't donate? watch an ad")
+                    ) {
+                        Log.i("MainActivity", "Suppressing promotional donation view containing: $text")
+                        root.visibility = View.GONE
+                        return
+                    }
+                } else if (child is ViewGroup) {
+                    dismissDonationViews(child)
+                }
+            }
+        }
     }
 
     suspend fun checkGithubConnectivity(): Boolean {

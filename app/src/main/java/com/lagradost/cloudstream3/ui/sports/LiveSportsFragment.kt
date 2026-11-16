@@ -19,10 +19,12 @@ import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.ui.APIRepository
 import com.lagradost.cloudstream3.ui.home.HomeViewModel.ExpandableHomepageList
 import com.lagradost.cloudstream3.ui.home.ParentItemAdapter
+import com.lagradost.cloudstream3.ui.result.START_ACTION_RESUME_LATEST
 import com.lagradost.cloudstream3.ui.search.SearchClickCallback
 import com.lagradost.cloudstream3.ui.search.SearchHelper
 import com.lagradost.cloudstream3.ui.settings.Globals.TV
 import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
+import com.lagradost.cloudstream3.utils.AppContextUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -59,7 +61,7 @@ class LiveSportsFragment : Fragment() {
         sportsAdapter = ParentItemAdapter(
             id = 0,
             clickCallback = { callback: SearchClickCallback ->
-                SearchHelper.handleSearchClickCallback(callback)
+                AppContextUtils.loadSearchResult(callback.card, START_ACTION_RESUME_LATEST)
             },
             moreInfoClickCallback = { _ -> },
             expandCallback = null
@@ -115,6 +117,7 @@ class LiveSportsFragment : Fragment() {
                 val sportsProviders = allProviders.filter { api ->
                     val name = api.name.lowercase()
                     name.contains("cric") || name.contains("sport") ||
+                    name.contains("sktech") || name.contains("sk") ||
                     name.contains("jio") || name.contains("daddy") || name.contains("elite") ||
                     name.contains("publicsports") || name.contains("fancode") || name.contains("iptv") ||
                     api.supportedTypes.contains(TvType.Live)

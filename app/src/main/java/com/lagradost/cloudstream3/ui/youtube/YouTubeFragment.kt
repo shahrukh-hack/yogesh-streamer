@@ -24,10 +24,12 @@ import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.ui.APIRepository
 import com.lagradost.cloudstream3.ui.home.HomeViewModel.ExpandableHomepageList
 import com.lagradost.cloudstream3.ui.home.ParentItemAdapter
+import com.lagradost.cloudstream3.ui.result.START_ACTION_RESUME_LATEST
 import com.lagradost.cloudstream3.ui.search.SearchClickCallback
 import com.lagradost.cloudstream3.ui.search.SearchHelper
 import com.lagradost.cloudstream3.ui.settings.Globals.TV
 import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
+import com.lagradost.cloudstream3.utils.AppContextUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -61,7 +63,7 @@ class YouTubeFragment : Fragment() {
         tubeAdapter = ParentItemAdapter(
             id = 1,
             clickCallback = { callback: SearchClickCallback ->
-                SearchHelper.handleSearchClickCallback(callback)
+                AppContextUtils.loadSearchResult(callback.card, START_ACTION_RESUME_LATEST)
             },
             moreInfoClickCallback = { _ -> },
             expandCallback = null
@@ -175,7 +177,11 @@ class YouTubeFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val ytProvider = APIHolder.allProviders.firstOrNull { it is YouTubeProvider } ?: YouTubeProvider().also {
+                val ytProvider = APIHolder.allProviders.firstOrNull {
+                    it.name.contains("SmartTube", ignoreCase = true)
+                } ?: APIHolder.allProviders.firstOrNull {
+                    it is YouTubeProvider
+                } ?: YouTubeProvider().also {
                     APIHolder.allProviders.add(it)
                     APIHolder.addPluginMapping(it)
                 }
@@ -254,7 +260,11 @@ class YouTubeFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val ytProvider = APIHolder.allProviders.firstOrNull { it is YouTubeProvider } ?: YouTubeProvider().also {
+                val ytProvider = APIHolder.allProviders.firstOrNull {
+                    it.name.contains("SmartTube", ignoreCase = true)
+                } ?: APIHolder.allProviders.firstOrNull {
+                    it is YouTubeProvider
+                } ?: YouTubeProvider().also {
                     APIHolder.allProviders.add(it)
                     APIHolder.addPluginMapping(it)
                 }

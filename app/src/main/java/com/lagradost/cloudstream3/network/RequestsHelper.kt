@@ -11,7 +11,11 @@ import com.lagradost.nicehttp.ignoreAllSSLErrors
 import okhttp3.Cache
 import okhttp3.Headers
 import okhttp3.Headers.Companion.toHeaders
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
+import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.conscrypt.Conscrypt
 import java.io.File
 import java.security.Security
@@ -41,6 +45,29 @@ fun buildDefaultClient(context: Context, ignoreSSL: Boolean = false): OkHttpClie
     val baseClient = OkHttpClient.Builder()
         .followRedirects(true)
         .followSslRedirects(true)
+        .addInterceptor { chain ->
+            val url = chain.request().url.toString().lowercase()
+            if (url.contains("allforu-goal") ||
+                url.contains("supportbot.phisher") ||
+                (url.contains("phisher98") && url.contains("goal.json")) ||
+                url.contains("raghav/master/goal.json") ||
+                url.contains("buymeacoffee") ||
+                url.contains("omg10.com")
+            ) {
+                Response.Builder()
+                    .request(chain.request())
+                    .protocol(Protocol.HTTP_1_1)
+                    .code(200)
+                    .message("OK")
+                    .body(
+                        "{\"enabled\":false,\"totalUsd\":0,\"amount\":0,\"supporters\":0,\"goalReached\":true,\"progress\":0}"
+                            .toResponseBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                    )
+                    .build()
+            } else {
+                chain.proceed(chain.request())
+            }
+        }
         .apply {
             if (ignoreSSL) {
                 ignoreAllSSLErrors()
